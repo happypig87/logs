@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>郵差的一生：三階段隨機事件版</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #game-card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 750px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            background: #2a2a2a;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 13px;
+        }
+        .stat-box { display: flex; flex-direction: column; align-items: center; }
+        .stat-val { font-weight: bold; font-size: 18px; margin-top: 4px; }
+        
+        .rank-poor { color: #f44336; }
+        .rank-below { color: #ff9800; }
+        .rank-avg { color: #ffeb3b; }
+        .rank-above { color: #8bc34a; }
+        .rank-elite { color: #00e676; }
+
+        .finance-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #252525;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .phase-indicator {
+            background: #2196f3;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        #story-text {
+            font-size: 15px;
+            line-height: 1.6;
+            min-height: 80px;
+            margin-bottom: 20px;
+            background: #252525;
+            padding: 15px;
+            border-left: 4px solid #2196f3;
+            border-radius: 4px;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        button.option-btn {
+            background: #2c2c2c;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button.option-btn:hover {
+            background: #3a3a3a;
+            border-color: #2196f3;
+            transform: translateY(-2px);
+        }
+        .chance-badge {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        .chance-high { background: #1b5e20; color: #81c784; }
+        .chance-med { background: #e65100; color: #ffb74d; }
+        .chance-low { background: #b71c1c; color: #e57373; }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 14px; color: #bbb; }
+        input[type="text"] {
+            width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444;
+            border-radius: 6px; color: #fff; font-size: 16px; box-sizing: border-box;
+        }
+        input[type="range"] { width: 100%; accent-color: #2196f3; }
+        .start-btn {
+            width: 100%; background: #2196f3; text-align: center; font-weight: bold;
+            font-size: 18px; margin-top: 10px; padding: 14px; border: none; border-radius: 6px; color: #fff; cursor: pointer;
+        }
+        .start-btn:hover { background: #1976d2; }
+        #log {
+            margin-top: 20px; font-size: 13px; color: #aaa; max-height: 140px;
+            overflow-y: auto; border-top: 1px solid #333; padding-top: 10px; line-height: 1.5;
+        }
+        .hidden { display: none !important; }
+        .log-success { color: #81c784; }
+        .log-fail { color: #e57373; }
+        .age-warning { color: #f44336; font-size: 12px; margin-top: 4px; display: none; }
+    </style>
+</head>
+<body>
+
+<div id="game-card">
+    <!-- 入職設定 -->
+    <div id="setup-screen">
+        <h2 style="margin-top:0; text-align:center;">📋 郵務人員入職登記</h2>
+        <p style="color:#aaa; text-align:center; font-size:14px; margin-bottom: 25px;">每年經歷「投遞問題、職場互動、生涯意外」三類挑戰。</p>
+        
+        <div class="form-group">
+            <label for="player-name">郵務士姓名：</label>
+            <input type="text" id="player-name" placeholder="請輸入姓名" value="陳大明">
+        </div>
+
+        <div class="form-group">
+            <label for="start-age">入職年齡：<span id="age-val" style="color:#ffeb3b; font-weight:bold; font-size:18px;">22</span> 歲</label>
+            <input type="range" id="start-age" min="18" max="50" value="22" oninput="onAgeChange(this.value)">
+            <div id="age-cap-tip" class="age-warning">⚠️ 入職年齡超過 40 歲：體力最高上限受限為 60 分。</div>
+        </div>
+
+        <button class="start-btn" onclick="startGame()">正式報到入職</button>
+    </div>
+
+    <!-- 遊戲主畫面 -->
+    <div id="game-screen" class="hidden">
+        <div class="header">
+            <div>
+                <h2 style="margin:0; font-size: 20px;" id="display-name">郵務士</h2>
+                <span id="display-career" style="font-size:12px; color:#aaa;">年資第 1 年</span>
+            </div>
+            <div><span id="age" style="font-size: 22px; color:#ffeb3b;">18</span> 歲 (退休倒數 <span id="years-left">--</span> 年)</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">體力<span id="stamina" class="stat-val">50</span></div>
+            <div class="stat-box">情商<span id="eq" class="stat-val">50</span></div>
+            <div class="stat-box">職場聲望<span id="reputation" class="stat-val">50</span></div>
+            <div class="stat-box">應變能力<span id="adaptability" class="stat-val">50</span></div>
+            <div class="stat-box">工作評價<span id="performance" class="stat-val">50</span></div>
+        </div>
+
+        <div class="finance-bar">
+            <div>本年薪資：<span id="salary-display" style="color:#ffc107; font-weight:bold;">76 萬</span></div>
+            <div>累積總資產：<span id="money" style="color:#4caf50; font-weight:bold;">$0 萬</span></div>
+        </div>
+
+        <div>
+            <span id="phase-tag" class="phase-indicator">階段 1/3：投遞日常事件</span>
+        </div>
+
+        <div id="story-text">載入中...</div>
+
+        <div id="options" class="options-container"></div>
+
+        <div id="log">--- 履歷日誌 ---</div>
+    </div>
+</div>
+
+<script>
+let player = {
+    name: "", age: 18, startAge: 18, retireAge: 65,
+    stamina: 50, eq: 50, reputation: 50, adaptability: 50, performance: 50,
+    money: 0,
+    maxStaminaCap: 80,
+    currentPhase: 1 // 1: 投遞問題, 2: 職場互動, 3: 生涯意外
+};
+
+const salaryTable = {
+    1: 76, 2: 84, 3: 86, 4: 88, 5: 90, 6: 94, 7: 94, 8: 99, 9: 101, 10: 103,
+    11: 106, 12: 107, 13: 109, 14: 110, 15: 111, 16: 113, 17: 115
+};
+
+function calculateSalary(serviceYear) {
+    let salaryInWan = serviceYear <= 17 ? salaryTable[serviceYear] : ((serviceYear - 18) % 5 + 1 === 5 ? 128 : 121);
+    return { amount: salaryInWan * 10000, displayWan: salaryInWan, statusTag: `年資第 ${serviceYear} 年` };
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function onAgeChange(val) {
+    document.getElementById('age-val').innerText = val;
+    document.getElementById('age-cap-tip').style.display = parseInt(val) > 40 ? 'block' : 'none';
+}
+
+// ================= 三大類別龐大事件庫 (各20個) =================
+const eventDatabase = {
+    // 第一類：投遞中遇到的問題 (20個)
+    delivery: [
+        {
+            title: "暴雨突襲與積水路段",
+            desc: "午後突降狂風暴雨，前方路段積水嚴重，郵件有泡水風險...",
+            options: [
+                { text: "【穩健】暫避騎樓，將郵件套上防雨塑膠袋後等雨勢變小", baseChance: 85, statCheck: "adaptability", success: { effect: { stamina: -2, adaptability: 3, performance: 3 }, log: "✅ [成功] 郵件完好無損，客戶讚許你的細心。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 等雨過久，部分信件稍微延誤。" } },
+                { text: "【平衡】憑經驗繞道高勢巷弄繼續遞送", baseChance: 60, statCheck: "stamina", success: { effect: { stamina: -5, adaptability: 5, performance: 5 }, log: "✅ [成功] 順利繞過積水區，準時完成遞送。" }, fail: { effect: { stamina: -8, performance: -4 }, log: "❌ [失敗] 迷失在陌生巷弄，白白浪費體力與時間。" } },
+                { text: "【冒險】油門一催，直接騎車衝過積水！", baseChance: 30, statCheck: "adaptability", success: { effect: { stamina: -3, reputation: 6, performance: 8 }, log: "🎉 [大成功] 奇蹟般衝過！被目擊民眾讚為「最強郵差」。" }, fail: { effect: { stamina: -10, performance: -8, money: -3000 }, log: "💥 [慘烈失敗] 引擎進水熄火，下半身包裹全濕受損。" } }
+            ]
+        },
+        {
+            title: "無繫繩惡犬攔路",
+            desc: "一隻大型猛犬衝出巷口對你狂吠，堵住去路...",
+            options: [
+                { text: "【穩健】保持冷靜不對視，用郵差包擋前面緩步退後", baseChance: 80, statCheck: "eq", success: { effect: { eq: 4, adaptability: 2 }, log: "✅ [成功] 犬隻見無威脅後自行退去。" }, fail: { effect: { stamina: -3, eq: -2 }, log: "❌ [失敗] 被堵在巷口近20分鐘，進度嚴重受阻。" } },
+                { text: "【平衡】掏出隨身肉乾試圖進行友好外交", baseChance: 60, statCheck: "eq", success: { effect: { eq: 6, reputation: 4, money: -100 }, log: "✅ [成功] 肉乾收服成功，以後這條巷子暢行無阻。" }, fail: { effect: { eq: -4, money: -100 }, log: "❌ [失敗] 狗吃完肉乾繼續狂吠，毫無效果。" } },
+                { text: "【冒險】拿防身棍大聲呵斥，硬生生逼退惡犬！", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 8, stamina: 3 }, log: "🎉 [大成功] 霸氣威壓！惡犬夾著尾巴逃跑。" }, fail: { effect: { stamina: -12, performance: -6, money: -2000 }, log: "💥 [慘烈失敗] 激怒惡犬被咬傷褲管，必須就醫打針。" } }
+            ]
+        },
+        {
+            title: "暴躁客戶質疑包裹破損",
+            desc: "住戶認為你弄壞了國際包裹，在門口大聲叫囂並錄影投訴...",
+            options: [
+                { text: "【穩健】展現專業情商，安撫對方並依規範填寫評估單", baseChance: 85, statCheck: "eq", success: { effect: { eq: 5, performance: 3 }, log: "✅ [成功] 冷靜應對化解危機，住戶自知理虧道歉。" }, fail: { effect: { eq: -3, performance: -2 }, log: "❌ [失敗] 住戶不買帳，堅持向總局申訴。" } },
+                { text: "【平衡】邀請住戶當場共同開箱檢視內部物品", baseChance: 55, statCheck: "adaptability", success: { effect: { eq: 4, performance: 6 }, log: "✅ [成功] 開箱發現內部完好，誤會順利化解。" }, fail: { effect: { reputation: -5, performance: -5 }, log: "❌ [失敗] 內部物品確實受損，私下開箱違規遭檢舉。" } },
+                { text: "【冒險】拿出郵件收單紀錄據理力爭，拒絕吞下悶氣！", baseChance: 20, statCheck: "reputation", success: { effect: { reputation: 8, eq: 5 }, log: "🎉 [大成功] 拿出鐵證壓制對方，住戶啞口無言道歉。" }, fail: { effect: { reputation: -8, performance: -8 }, log: "💥 [慘烈失敗] 爭執過程被上傳社團，遭局裡警告。" } }
+            ]
+        },
+        {
+            title: "老舊公寓頂樓無電梯掛號",
+            desc: "連續數封重量極沉的包裹，全都要搬上無電梯的6樓...",
+            options: [
+                { text: "【穩健】分批咬牙搬運，安全第一防腰部受傷", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: -4, performance: 4 }, log: "✅ [成功] 雖然勞累，但安全將包裹全數送達。" }, fail: { effect: { stamina: -6 }, log: "❌ [失敗] 耗費巨大量體力，導致後半天體力透支。" } },
+                { text: "【平衡】一次性將包裹全部扛起，一口氣衝上6樓", baseChance: 50, statCheck: "stamina", success: { effect: { stamina: -5, performance: 8 }, log: "✅ [成功] 驚人展現效率！大幅節省投遞時間。" }, fail: { effect: { stamina: -12, performance: -3 }, log: "❌ [失敗] 閃到腰部，被迫停下休息近半小時。" } },
+                { text: "【冒險】連絡住戶協商，請住戶下樓協助或改約地點", baseChance: 35, statCheck: "eq", success: { effect: { eq: 6, stamina: 1 }, log: "🎉 [大成功] 住戶非常體諒，主動下樓協助搬運。" }, fail: { effect: { performance: -6, reputation: -4 }, log: "💥 [慘烈失敗] 住戶怒斥服態度差，直接電話投訴。" } }
+            ]
+        },
+        {
+            title: "模糊不清的收件地址",
+            desc: "手寫信件上的地址字跡極度潦草且部分塗改，無法辨識...",
+            options: [
+                { text: "【穩健】帶回局裡查閱舊戶政紀錄與地圖系統比對", baseChance: 80, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 3 }, log: "✅ [成功] 查出正確地址，成功化身死信克星。" }, fail: { effect: { adaptability: -2 }, log: "❌ [失敗] 查無此人，只能做退件處理。" } },
+                { text: "【平衡】憑藉對該區巷弄的多年印象直接前往嘗試", baseChance: 55, statCheck: "adaptability", success: { effect: { adaptability: 7, reputation: 4 }, log: "✅ [成功] 直覺精準！順利找到收件住戶。" }, fail: { effect: { stamina: -5, performance: -3 }, log: "❌ [失敗] 跑錯好幾個巷弄，無功而返。" } },
+                { text: "【冒險】撥打信件上隱約可見的手機號碼試探", baseChance: 30, statCheck: "eq", success: { effect: { eq: 6, adaptability: 6 }, log: "🎉 [大成功] 電話打通！對方正好在附近親自領取。" }, fail: { effect: { eq: -5, reputation: -3 }, log: "💥 [慘烈失敗] 打錯給脾氣暴躁的陌生人遭痛罵一頓。" } }
+            ]
+        },
+        { title: "突發道路工程封鎖", desc: "主幹道突然因管線施工全線封鎖，影響整個區域遞送...", options: [
+            { text: "【穩健】按標準備用路線繞行，預先通報局裡", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 2 }, log: "✅ [成功] 雖然稍微延遲，但掌控整體進度。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 繞道路段嚴重塞車。" } },
+            { text: "【平衡】穿梭防火巷與狹窄弄堂尋找捷徑", baseChance: 55, statCheck: "stamina", success: { effect: { stamina: -3, adaptability: 6 }, log: "✅ [成功] 完美穿梭小巷，完全沒受塞車影響。" }, fail: { effect: { stamina: -6, adaptability: -3 }, log: "❌ [失敗] 在死胡同裡卡了許久。" } },
+            { text: "【冒險】禮貌向施工人員協調，請求臨時放行機車", baseChance: 25, statCheck: "eq", success: { effect: { eq: 8, performance: 6 }, log: "🎉 [大成功] 施工大哥熱心挪開圍欄讓你優先通過！" }, fail: { effect: { reputation: -5, eq: -4 }, log: "💥 [慘烈失敗] 被施工人員當場呵斥開裁。" } }
+        ]},
+        { title: "雙十節連假前郵件爆量", desc: "連假前夕包裹與信件量飆升至平日的三倍，堆積如山...", options: [
+            { text: "【穩健】按照既定步調平穩投遞，加班完成", baseChance: 80, statCheck: "stamina", success: { effect: { stamina: -6, performance: 5 }, log: "✅ [成功] 穩紮穩打完成當日爆量作業。" }, fail: { effect: { stamina: -10 }, log: "❌ [失敗] 加班至深夜，體力嚴重透支。" } },
+            { text: "【平衡】優化排序與路線，優先處理高時效掛號件", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 7, performance: 7 }, log: "✅ [成功] 路線優化極佳，提早半小時清空包裹。" }, fail: { effect: { adaptability: -4, performance: -4 }, log: "❌ [失敗] 排序錯誤導致重複跑路。" } },
+            { text: "【冒險】火力全開飆速投遞，挑戰個人極限！", baseChance: 25, statCheck: "stamina", success: { effect: { stamina: -4, reputation: 10, performance: 10 }, log: "🎉 [大成功] 創下局裡最快清件紀錄！" }, fail: { effect: { stamina: -15, performance: -8, money: -1000 }, log: "💥 [慘烈失敗] 因太過匆忙導致兩件郵件放錯信箱。" } }
+        ]},
+        { title: "偏遠山區獨居老人郵件", desc: "需要騎車十幾公里前往山區為獨居老人送藥物掛號...", options: [
+            { text: "【穩健】安全騎行，細心確認老人家安全並簽收", baseChance: 85, statCheck: "eq", success: { effect: { eq: 5, reputation: 4 }, log: "✅ [成功] 順利送達，長輩十分感激。" }, fail: { effect: { stamina: -5 }, log: "❌ [失敗] 山路彎曲耗費大量時間。" } },
+            { text: "【平衡】順道為老人家帶一份山下的熱便當", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 8, money: -100 }, log: "✅ [成功] 溫暖舉動被長輩家屬大力致謝與讚揚。" }, fail: { effect: { eq: -2, money: -100 }, log: "❌ [失敗] 老人當天剛好不在家。" } },
+            { text: "【冒險】嘗試走未鋪設的陡峭山林捷徑省時間", baseChance: 30, statCheck: "stamina", success: { effect: { stamina: -3, adaptability: 8 }, log: "🎉 [大成功] 大幅縮短騎行時間！" }, fail: { effect: { stamina: -10, money: -2000 }, log: "💥 [慘烈失敗] 機車在泥濘山路打滑受損。" } }
+        ]},
+        { title: "掛號郵件無人應門", desc: "多次按電鈴無人回應，但屋內隱約有電視聲音...", options: [
+            { text: "【穩健】開立招領通知單黏貼於門口，依規處理", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 3, performance: 2 }, log: "✅ [成功] 標準程序處理完畢。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 住戶事後抱怨沒聽到電鈴。" } },
+            { text: "【平衡】在門口耐心等候3分鐘並再次大聲呼喚", baseChance: 60, statCheck: "eq", success: { effect: { eq: 5, performance: 5 }, log: "✅ [成功] 住戶重聽剛好聽到，感激開門領取。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 純粹浪費了等候時間。" } },
+            { text: "【冒險】嘗試聯繫鄰居幫忙轉告或協助聯絡", baseChance: 30, statCheck: "eq", success: { effect: { eq: 7, reputation: 5 }, log: "🎉 [大成功] 熱心鄰居直接幫忙叫出住戶！" }, fail: { effect: { eq: -5, reputation: -4 }, log: "💥 [慘烈失敗] 被鄰居誤認為偷窺隱私而招致白眼。" } }
+        ]},
+        { title: "郵務車騎行中突發破胎", desc: "後輪突然被大鐵釘刺穿，車上還有大半車郵件...", options: [
+            { text: "【穩健】推車至附近車行補胎，並通報回回回局裡", baseChance: 80, statCheck: "stamina", success: { effect: { stamina: -4, adaptability: 3, money: -200 }, log: "✅ [成功] 快速完成補胎，恢復投遞。" }, fail: { effect: { stamina: -8, money: -200 }, log: "❌ [失敗] 找不到車行，推車推到極度疲憊。" } },
+            { text: "【平衡】拿出隨身打氣筒與補胎劑進行緊急自救", baseChance: 50, statCheck: "adaptability", success: { effect: { adaptability: 8, money: 300 }, log: "✅ [成功] 自力救濟成功，省時又省錢！" }, fail: { effect: { adaptability: -3, stamina: -6 }, log: "❌ [失敗] 補胎失敗，氣依舊漏光。" } },
+            { text: "【冒險】聯絡同區域同仁前來協助接應包裹分擔", baseChance: 35, statCheck: "reputation", success: { effect: { reputation: 6, eq: 5 }, log: "🎉 [大成功] 好人緣展現！同仁迅速趕來救援。" }, fail: { effect: { reputation: -5 }, log: "💥 [慘烈失敗] 同仁業務也過重，無法撥空支援。" } }
+        ]},
+        { title: "高級住宅區管理員刁難", desc: "豪宅保全要求繁瑣登記並扣留身分證才准進去送包裹...", options: [
+            { text: "【穩健】配合登記流程，維持禮貌與職責", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, reputation: 3 }, log: "✅ [成功] 順利入內完成配送。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 登記過程冗長耗時。" } },
+            { text: "【平衡】向保全宣導郵務人員執行公務相關規定", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 6, reputation: 5 }, log: "✅ [成功] 講道理打動保全，簡化未來進出手續。" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 雙方發生口角陷入僵局。" } },
+            { text: "【冒險】直接聯絡該戶業主下樓親自簽收", baseChance: 30, statCheck: "eq", success: { effect: { eq: 8, performance: 5 }, log: "🎉 [大成功] 業主親自下樓並責備保全過度刁難。" }, fail: { effect: { performance: -5, eq: -5 }, log: "💥 [慘烈失敗] 業主不滿被打擾，向主管抱怨。" } }
+        ]},
+        { title: "夏季高溫酷暑投遞", desc: "體感溫度高達 40 度，烈日下容易中暑發昏...", options: [
+            { text: "【穩健】定時於超商補給水分與電解質，適度休息", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: -2, adaptability: 2 }, log: "✅ [成功] 身體狀況良好，平穩完成工作。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 休息次數稍多導致稍微延遲。" } },
+            { text: "【平衡】配戴降溫冰涼巾，咬牙一口氣送完再休息", baseChance: 55, statCheck: "stamina", success: { effect: { stamina: -5, performance: 6 }, log: "✅ [成功] 高效率送完，提早下班休息。" }, fail: { effect: { stamina: -10, adaptability: -3 }, log: "❌ [失敗] 輕微中暑頭暈，下午效率大減。" } },
+            { text: "【冒險】挑戰極限高溫下的連續配送速度", baseChance: 25, statCheck: "stamina", success: { effect: { stamina: -3, performance: 10 }, log: "🎉 [大成功] 鋼鐵意志！順利完成超高強度任務。" }, fail: { effect: { stamina: -15, money: -1500 }, log: "💥 [慘烈失敗] 嚴重中暑刮痧送醫，耽誤工作。" } }
+        ]},
+        { title: "郵件袋鈕扣突然斷裂", desc: "大量信件差點散落於繁忙的十字路口...", options: [
+            { text: "【穩健】立即停車，用備用繩索將郵包牢牢紮緊", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 2 }, log: "✅ [成功] 處置迅速，無任何信件遺失。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 綁紮過程稍微耗時。" } },
+            { text: "【平衡】用單手護住郵包，低速騎回近處據點處理", baseChance: 50, statCheck: "stamina", success: { effect: { stamina: -3, adaptability: 6 }, log: "✅ [成功] 控制得當，平安回到據點更換袋子。" }, fail: { effect: { performance: -6, reputation: -4 }, log: "❌ [失敗] 途中仍有數封宣傳單吹飛散落。" } },
+            { text: "【冒險】向路過民眾借用膠帶暫時封固", baseChance: 30, statCheck: "eq", success: { effect: { eq: 7, reputation: 5 }, log: "🎉 [大成功] 熱心民眾直接贈送一整捲膠帶！" }, fail: { effect: { eq: -4 }, log: "💥 [慘烈失敗] 被路人冷漠拒絕，氣氛尷尬。" } }
+        ]},
+        { title: "送達高額貨到付款件", desc: "金額高達數萬元的貨到付款，住戶掏出大量千元大鈔...", options: [
+            { text: "【穩健】當面一張張仔細核對驗鈔，確保金額無誤", baseChance: 90, statCheck: "adaptability", success: { effect: { adaptability: 3, performance: 3 }, log: "✅ [成功] 款項精確無誤，順利結案。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 客戶等得有些不耐煩。" } },
+            { text: "【平衡】使用手機網銀轉帳核對功能協助客戶點算", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 7, reputation: 4 }, log: "✅ [成功] 展現現代化專業效率。" }, fail: { effect: { adaptability: -3 }, log: "❌ [失敗] 操作不熟悉反而耽誤時間。" } },
+            { text: "【冒險】憑信任快速清點，迅速完成簽收", baseChance: 20, statCheck: "reputation", success: { effect: { reputation: 6, performance: 5 }, log: "🎉 [大成功] 信任感滿分，獲得客戶極高評價。" }, fail: { effect: { performance: -8, money: -1000 }, log: "💥 [慘烈失敗] 回局結帳時發現少一張千元鈔，只能自掏腰包。" } }
+        ]},
+        { title: "遇到外國籍住戶收件", desc: "對方完全不懂中文，手勢比劃無法溝通...", options: [
+            { text: "【穩健】使用手機翻譯軟體進行文字溝通", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 5, eq: 3 }, log: "✅ [成功] 翻譯軟體完美解決溝通障礙。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 網路訊號差，翻譯跑很久。" } },
+            { text: "【平衡】試圖用簡單流利的英語進行基本對話", baseChance: 55, statCheck: "eq", success: { effect: { eq: 7, reputation: 6 }, log: "✅ [成功] 英文溝通無礙，外國友人大讚專業！" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 詞不達意，雙方更加困惑。" } },
+            { text: "【冒險】用豐富肢體語言與國際通用手勢溝通", baseChance: 35, statCheck: "adaptability", success: { effect: { eq: 6, adaptability: 6 }, log: "🎉 [大成功] 默契十足！順利完成簽收。" }, fail: { effect: { eq: -3 }, log: "💥 [慘烈失敗] 比手畫腳半天依然無法理解。" } }
+        ]},
+        { title: "送達喜帖與慶賀郵件", desc: "住戶正好在辦喜事，滿臉喜色招待郵差...", options: [
+            { text: "【穩健】送上誠摯祝賀，依流程完成簽收", baseChance: 90, statCheck: "eq", success: { effect: { eq: 4, reputation: 3 }, log: "✅ [成功] 賓主盡歡，收下喜氣。" }, fail: { effect: { eq: -1 }, log: "❌ [失敗] 平淡應對，略顯拘謹。" } },
+            { text: "【平衡】熱情說幾句吉祥話祝賀新婚喜事", baseChance: 65, statCheck: "eq", success: { effect: { eq: 8, money: 200 }, log: "✅ [成功] 主人龍心大悅，塞了個喜糖紅包給你！" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 吉祥話說得不夠流利。" } },
+            { text: "【冒險】大聲祝賀並主動合照記錄溫馨時刻", baseChance: 30, statCheck: "reputation", success: { effect: { reputation: 10, eq: 8 }, log: "🎉 [大成功] 照片被傳上網，溫馨故事廣為流傳！" }, fail: { effect: { eq: -5 }, log: "💥 [慘烈失敗] 場面有些過度熱情引發尷尬。" } }
+        ]},
+        { title: "巷弄內汽車違規併排停車", desc: "違規車輛徹底堵死狹窄巷道，機車無法通過...", options: [
+            { text: "【穩健】暫停路邊，改為徒步進入巷內投遞", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: -3, performance: 3 }, log: "✅ [成功] 徒步順利完成該巷投遞。" }, fail: { effect: { stamina: -6 }, log: "❌ [失敗] 抱著包裹徒步極度耗費體力。" } },
+            { text: "【平衡】按喇叭警示並尋找車主移車", baseChance: 60, statCheck: "eq", success: { effect: { eq: 5, adaptability: 4 }, log: "✅ [成功] 車主迅速跑出來致歉並移車。" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 車主久未出現，浪費時間。" } },
+            { text: "【冒險】拍照檢舉並通知警察拖吊", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 8, performance: 5 }, log: "🎉 [大成功] 警方迅速到場開單，鄰居拍手叫好！" }, fail: { effect: { reputation: -6, eq: -6 }, log: "💥 [慘烈失敗] 車主衝出來與你爆發激烈口角。" } }
+        ]},
+        { title: "郵件地址為停業公司", desc: "該商業大樓公司已搬遷停業，招牌已拆除...", options: [
+            { text: "【穩健】作查無此公司處理，帶回局裡查證", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 2 }, log: "✅ [成功] 標準程序處理完畢。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 後續查詢程序繁瑣。" } },
+            { text: "【平衡】詢問大樓管理員是否知曉新搬遷地址", baseChance: 60, statCheck: "eq", success: { effect: { eq: 6, adaptability: 6 }, log: "✅ [成功] 管理員提供新地址，順利轉投送達！" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 管理員亦不知情。" } },
+            { text: "【冒險】網路上搜尋該公司新登記地址直接前往", baseChance: 30, statCheck: "adaptability", success: { effect: { adaptability: 9, performance: 8 }, log: "🎉 [大成功] 神速查到新址，獲得該公司極高感謝！" }, fail: { effect: { stamina: -8, performance: -4 }, log: "💥 [慘烈失敗] 查到舊的廢棄地址，白跑一趟。" } }
+        ]},
+        { title: "遭遇路上流浪貓阻撓", desc: "一隻可愛的流浪貓趴在郵務車座墊上死不肯走...", options: [
+            { text: "【穩健】溫柔將貓咪抱下車放至安全草叢", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4 }, log: "✅ [成功] 貓咪乖巧離開，繼續行程。" }, fail: { effect: { stamina: -2 }, log: "❌ [失敗] 貓咪跟你玩起了捉迷藏。" } },
+            { text: "【平衡】拿出零食誘惑貓咪主動離開座墊", baseChance: 65, statCheck: "eq", success: { effect: { eq: 7, reputation: 4, money: -50 }, log: "✅ [成功] 成功討好貓咪，療癒了工作心情！" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 貓咪吃完繼續趴著。" } },
+            { text: "【冒險】拍下貓咪趴車萌照上傳社群網路", baseChance: 30, statCheck: "reputation", success: { effect: { reputation: 10, eq: 6 }, log: "🎉 [大成功] 照片爆火！網友紛紛稱讚郵差有愛心。" }, fail: { effect: { performance: -4 }, log: "💥 [慘烈失敗] 沉迷拍貓耽誤了投遞行程。" } }
+        ]},
+        { title: "遇到極度熱心的茶水長輩", desc: "阿姨熱情拉著你喝茶切水果，不讓你離開...", options: [
+            { text: "【穩健】婉謝好意，說明郵務公務在身需趕時間", baseChance: 80, statCheck: "eq", success: { effect: { eq: 4, performance: 3 }, log: "✅ [成功] 禮貌離開，兼顧效率與禮貌。" }, fail: { effect: { eq: -3 }, log: "❌ [失敗] 阿姨顯得有些落寞。" } },
+            { text: "【平衡】接下蘋果迅速吃完，陪聊兩分鐘後致謝離開", baseChance: 60, statCheck: "eq", success: { effect: { eq: 7, stamina: 3 }, log: "✅ [成功] 補充了能量又收穫熱情人情味！" }, fail: { effect: { stamina: -4 }, log: "❌ [失敗] 一聊就聊了十五分鐘。" } },
+            { text: "【冒險】順勢向阿姨打聽該社區的郵務改善建議", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 8, adaptability: 6 }, log: "🎉 [大成功] 獲得極具價值的社區民意情報！" }, fail: { effect: { performance: -6 }, log: "💥 [慘烈失敗] 被拉著聽了半小時家族八卦。" } }
+        ]}
+    ],
+
+    // 第二類：職場上與同事或上級的互動 (20個)
+    workplace: [
+        {
+            title: "局內新舊系統轉型培訓",
+            desc: "局裡推行數位化郵務系統，資深同仁抱怨連連，主管徵求種子教官...",
+            options: [
+                { text: "【穩健】按部就班參加培訓，完成基本學習任務", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 2 }, log: "✅ [成功] 平穩掌握新系統操作。" }, fail: { effect: { adaptability: -2 }, log: "❌ [失敗] 系統操作仍不夠熟練。" } },
+                { text: "【平衡】主動擔任種子教官，耐心地教學長輩同仁", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 7, performance: 5 }, log: "✅ [成功] 成為局裡數位達人，深受前輩讚許！" }, fail: { effect: { stamina: -5, eq: -4 }, log: "❌ [失敗] 耗費大量精力教學，成果不佳。" } },
+                { text: "【冒險】向主管提出系統介面優化建議案", baseChance: 25, statCheck: "adaptability", success: { effect: { adaptability: 10, performance: 10 }, log: "🎉 [大成功] 建議獲總局採納，頒發特別獎勵！" }, fail: { effect: { reputation: -6, performance: -5 }, log: "💥 [慘烈失敗] 被視為越權多事，主管頗有微詞。" } }
+            ]
+        },
+        {
+            title: "同事突然請病假分攤郵件",
+            desc: "同區同仁急性腸胃炎請假，主管希望有人能分擔其30%郵件...",
+            options: [
+                { text: "【穩健】接受主管安排，按標準加班完成分擔量", baseChance: 80, statCheck: "stamina", success: { effect: { stamina: -5, performance: 5, reputation: 4 }, log: "✅ [成功] 展現團隊精神，順利完成任務。" }, fail: { effect: { stamina: -9 }, log: "❌ [失敗] 體力嚴重透支。" } },
+                { text: "【平衡】主動與其他同仁協調，按路線效率重新分配", baseChance: 55, statCheck: "adaptability", success: { effect: { adaptability: 8, reputation: 6 }, log: "✅ [成功] 分工極佳，大家輕鬆完成支援。" }, fail: { effect: { eq: -5 }, log: "❌ [失敗] 協調過程引發同仁推託不滿。" } },
+                { text: "【冒險】承諾全包該同事郵件，挑戰單日雙倍極限！", baseChance: 20, statCheck: "stamina", success: { effect: { stamina: -8, reputation: 12, performance: 12, money: 2000 }, log: "🎉 [大成功] 局內封神！同仁與主管讚不絕口！" }, fail: { effect: { stamina: -15, performance: -10 }, log: "💥 [慘烈失敗] 完全送不完，大量郵件積壓遭懲處。" } }
+            ]
+        },
+        {
+            title: "考績評比前的意見調查",
+            desc: "主管在年終考績前夕徵詢對單位管理的反饋意見...",
+            options: [
+                { text: "【穩健】提出中規中矩、正面建設性的反饋", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, performance: 3 }, log: "✅ [成功] 給主管留下穩重得體的印象。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 意見顯得過於不痛不癢。" } },
+                { text: "【平衡】實話實說，反映基層設備老化與人力緊張問題", baseChance: 55, statCheck: "eq", success: { effect: { reputation: 8, performance: 6 }, log: "✅ [成功] 直言敢諫獲得同仁支持與主管重視。" }, fail: { effect: { performance: -6, eq: -4 }, log: "❌ [失敗] 主管認為你在抱怨職場。" } },
+                { text: "【冒險】直白指出主管排班制度的缺陷與不公", baseChance: 20, statCheck: "reputation", success: { effect: { reputation: 12, performance: 8 }, log: "🎉 [大成功] 說出大家不敢說的心聲，推動排班改革！" }, fail: { effect: { performance: -12, reputation: -8 }, log: "💥 [慘烈失敗] 徹底得罪主管，年終考績受損。" } }
+            ]
+        },
+        {
+            title: "局內聚餐活動籌備",
+            desc: "單位舉辦年度聚餐，主管指定你協助籌備與主持...",
+            options: [
+                { text: "【穩健】按照傳統選擇性價比高的餐廳與流程", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, reputation: 3 }, log: "✅ [成功] 聚餐平穩順利，大家吃得開心。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 活動較無亮點。" } },
+                { text: "【平衡】精心設計抽獎與互動遊戲帶動氣氛", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 7 }, log: "✅ [成功] 現場氣氛嗨翻，展現優異組織力！" }, fail: { effect: { eq: -5, money: -500 }, log: "❌ [失敗] 遊戲尷尬倒熱灶，還貼了小錢。" } },
+                { text: "【冒險】爭取局長特別贊助大獎並親自表演節目", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 12, performance: 8 }, log: "🎉 [大成功] 全場焦點！獲得局長高度讚賞。" }, fail: { effect: { reputation: -8, eq: -6 }, log: "💥 [慘烈失敗] 表演效果欠佳，場面一度十分尷尬。" } }
+            ]
+        },
+        {
+            title: "資深前輩的經驗傳承",
+            desc: "即將退休的老前輩想傳授你一套傳奇的「郵路分揀密技」...",
+            options: [
+                { text: "【穩健】虛心聽講並做筆記，表達感謝", baseChance: 85, statCheck: "eq", success: { effect: { adaptability: 4, eq: 4 }, log: "✅ [成功] 汲取寶貴職場經驗。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 前輩覺得你不夠積極。" } },
+                { text: "【平衡】下班後請前輩吃頓飯，深談職場心法", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, adaptability: 8, money: -500 }, log: "✅ [成功] 獲得前輩私房秘笈，分揀速度大增！" }, fail: { effect: { money: -500, eq: -2 }, log: "❌ [失敗] 前輩只是在吹噓當年勇。" } },
+                { text: "【冒險】結合前輩經驗與現代科技，製作數位指南分發", baseChance: 25, statCheck: "adaptability", success: { effect: { adaptability: 10, reputation: 10 }, log: "🎉 [大成功] 經驗成功傳承全局，獲頒創新獎！" }, fail: { effect: { reputation: -6 }, log: "💥 [慘烈失敗] 被前輩認為洩漏業務機密。" } }
+            ]
+        },
+        { title: "新人後輩帶領任務", desc: "局裡分配了一位剛入職的新人由你負責帶領實習...", options: [
+            { text: "【穩健】按標準作業手冊耐心地逐步指導", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, performance: 3 }, log: "✅ [成功] 新人順利上手，稱讚你是好導師。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 新人學習進度較慢。" } },
+            { text: "【平衡】分享許多實戰避坑技巧與私房捷徑", baseChance: 60, statCheck: "adaptability", success: { effect: { eq: 7, reputation: 6 }, log: "✅ [成功] 新人極速成長，成為你的得力助手！" }, fail: { effect: { performance: -4 }, log: "❌ [失敗] 新人學半套反而導致出錯。" } },
+            { text: "【冒險】第一天就讓新人獨立接手部分路線實戰", baseChance: 25, statCheck: "reputation", success: { effect: { performance: 8, adaptability: 8 }, log: "🎉 [大成功] 放手教育成功！新人表現超乎預期。" }, fail: { effect: { performance: -8, reputation: -6 }, log: "💥 [慘烈失敗] 新人迷路送錯信，你連帶受處分。" } }
+        ]},
+        { title: "同仁間的勞務分配爭議", desc: "部分同仁抱怨某些郵路距離短且輕鬆，分配不公...", options: [
+            { text: "【穩健】保持中立，遵守主管既定的輪調制度", baseChance: 85, statCheck: "eq", success: { effect: { eq: 3, reputation: 2 }, log: "✅ [成功] 未捲入紛爭，維持人際和諧。" }, fail: { effect: { reputation: -2 }, log: "❌ [失敗] 被雙方認為缺乏立場。" } },
+            { text: "【平衡】主動提議建立公信力高的輪調抽籤機制", baseChance: 55, statCheck: "adaptability", success: { effect: { reputation: 8, adaptability: 6 }, log: "✅ [成功] 成功化解團隊長期矛盾！" }, fail: { effect: { eq: -5 }, log: "❌ [失敗] 動了既得利益者的蛋糕招致不滿。" } },
+            { text: "【冒險】主動申請調換至最辛苦的山區路線示範", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 12, stamina: -4, performance: 8 }, log: "🎉 [大成功] 無私精神震撼全局，聲望飆升！" }, fail: { effect: { stamina: -12, performance: -5 }, log: "💥 [慘烈失敗] 路線過於吃力，自己也吃不消。" } }
+        ]},
+        { title: "局內工會代表選舉", desc: "局裡正在選拔新一任基層工會代表，同仁推舉你...", options: [
+            { text: "【穩健】低調參選，表達盡力而為的態度", baseChance: 80, statCheck: "reputation", success: { effect: { reputation: 5, eq: 3 }, log: "✅ [成功] 平穩當選代表，為同仁服務。" }, fail: { effect: { reputation: -2 }, log: "❌ [失敗] 票數略遜一籌。" } },
+            { text: "【平衡】發表具體的權益爭取政見（如改善裝備）", baseChance: 60, statCheck: "eq", success: { effect: { reputation: 9, performance: 5 }, log: "✅ [成功] 高票當選，深受基層擁戴！" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 政見未獲多數共鳴。" } },
+            { text: "【冒險】承諾直接向高層爭取增加高溫津貼", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 15, money: 1000 }, log: "🎉 [大成功] 成功爭取到津貼！被稱為基層英雄。" }, fail: { effect: { performance: -8, reputation: -8 }, log: "💥 [慘烈失敗] 與高層談判破裂，雙方尷尬。" } }
+        ]},
+        { title: "主管交辦非本業行政雜務", desc: "主管要求你下班後協助整理歷年郵務檔案庫...", options: [
+            { text: "【穩健】配合加班完成，按規定申請加班費", baseChance: 85, statCheck: "stamina", success: { effect: { performance: 4, money: 500 }, log: "✅ [成功] 完成雜務並獲得合規加班費。" }, fail: { effect: { stamina: -4 }, log: "❌ [失敗] 耗費個人休息時間。" } },
+            { text: "【平衡】展現電腦技能，快速將檔案電子化", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 8, performance: 7 }, log: "✅ [成功] 大幅提升檔案庫效率，主管大讚！" }, fail: { effect: { adaptability: -3 }, log: "❌ [失敗] 軟體不熟耽誤進度。" } },
+            { text: "【冒險】婉轉拒絕並建議成立專案外包處理", baseChance: 25, statCheck: "eq", success: { effect: { eq: 8, adaptability: 6 }, log: "🎉 [大成功] 主管採納建議，減輕所有人負擔！" }, fail: { effect: { performance: -8, eq: -6 }, log: "💥 [慘烈失敗] 主管認為缺乏服從心。" } }
+        ]},
+        { title: "局內安全講習評比", desc: "總局蒞臨進行年度交通安全與防盜講習測試...", options: [
+            { text: "【穩健】認真複習標準應對手冊，順利通過", baseChance: 85, statCheck: "adaptability", success: { effect: { performance: 3, adaptability: 3 }, log: "✅ [成功] 順利通過評比。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 筆試錯了幾題。" } },
+            { text: "【平衡】主動示範防衛術與郵件防搶演練", baseChance: 60, statCheck: "stamina", success: { effect: { performance: 8, reputation: 6 }, log: "✅ [成功] 演練精采絕倫，總局督導給予滿分！" }, fail: { effect: { stamina: -4, performance: -3 }, log: "❌ [失敗] 演練中不小心摔倒拉傷。" } },
+            { text: "【冒險】提出實戰中交通安全的盲點與改善提案", baseChance: 25, statCheck: "adaptability", success: { effect: { adaptability: 10, performance: 10 }, log: "🎉 [大成功] 提案獲總局推廣至全國郵局！" }, fail: { effect: { reputation: -5 }, log: "💥 [慘烈失敗] 被視為挑惕現行法規。" } }
+        ]},
+        { title: "同事之間的團購邀約", desc: "同仁發起大規模地方特產團購，熱情邀你加入...", options: [
+            { text: "【穩健】購買適量特產，捧場人情", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, money: -300 }, log: "✅ [成功] 增進同事感情，特產也很美味。" }, fail: { effect: { money: -300 }, log: "❌ [失敗] 特產味道不如預期。" } },
+            { text: "【平衡】推薦自己家鄉的超強特產進行反向交流", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 5, money: -300 }, log: "✅ [成功] 家鄉特產驚豔全辦公室！" }, fail: { effect: { eq: -3, money: -300 }, log: "❌ [失敗] 大家對你推薦的特產反應平平。" } },
+            { text: "【冒險】幫大家向店家談判拿到超級團購折扣", baseChance: 30, statCheck: "adaptability", success: { effect: { reputation: 10, eq: 8, money: 200 }, log: "🎉 [大成功] 砍價高手！幫大家省了大筆錢！" }, fail: { effect: { eq: -5 }, log: "💥 [慘烈失敗] 談判失敗導致團購取消，大家掃興。" } }
+        ]},
+        { title: "局內環境清潔與大掃除", desc: "歲末年終辦公室與分揀場大掃除競賽...", options: [
+            { text: "【穩健】認真清掃自己負責的區域，維持整潔", baseChance: 85, statCheck: "stamina", success: { effect: { performance: 3, stamina: -2 }, log: "✅ [成功] 負責區域煥然一新。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 耗費體力且效果一般。" } },
+            { text: "【平衡】主動承擔最髒亂的死角清潔", baseChance: 60, statCheck: "stamina", success: { effect: { reputation: 7, performance: 6, stamina: -4 }, log: "✅ [成功] 默默付出被主管看在眼裡，獲得讚揚！" }, fail: { effect: { stamina: -8 }, log: "❌ [失敗] 累得半死但評比並未獲獎。" } },
+            { text: "【冒險】規劃全新物料擺放動線，徹底改造分揀場", baseChance: 25, statCheck: "adaptability", success: { effect: { adaptability: 10, performance: 10 }, log: "🎉 [大成功] 拿下全區清潔第一名獎杯！" }, fail: { effect: { reputation: -6 }, log: "💥 [慘烈失敗] 大家習慣的動線被弄亂引發抱怨。" } }
+        ]},
+        { title: "鄰近郵局人力緊急借調", desc: "隔壁區郵局因集體流感人力崩盤，徵求志願支援...", options: [
+            { text: "【穩健】服從調派，前往支援兩天", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: -4, performance: 5 }, log: "✅ [成功] 順利完成跨區支援任務。" }, fail: { effect: { stamina: -6 }, log: "❌ [失敗] 陌生路線讓效率下降。" } },
+            { text: "【平衡】迅速掌握陌生路線，展示強大適應力", baseChance: 55, statCheck: "adaptability", success: { effect: { adaptability: 8, reputation: 8 }, log: "✅ [成功] 支援效率比當地人還快，名聲大噪！" }, fail: { effect: { performance: -4, stamina: -6 }, log: "❌ [失敗] 頻頻跑錯巷弄造成延誤。" } },
+            { text: "【冒險】協助隔壁局重組當天投遞動線", baseChance: 20, statCheck: "adaptability", success: { effect: { reputation: 12, performance: 12 }, log: "🎉 [大成功] 救火英雄！獲跨局嘉獎一次！" }, fail: { effect: { reputation: -8, eq: -6 }, log: "💥 [慘烈失敗] 被對方資深員工質疑瞎指揮。" } }
+        ]},
+        { title: "辦公室冷氣溫度之爭", desc: "內勤與外勤同仁對辦公室冷氣溫度設定爭執不下...", options: [
+            { text: "【穩健】保持沉默，配合多數人的溫度決定", baseChance: 85, statCheck: "eq", success: { effect: { eq: 3 }, log: "✅ [成功] 平穩度過職場小波折。" }, fail: { effect: { eq: -1 }, log: "❌ [失敗] 忍受不適宜的溫度。" } },
+            { text: "【平衡】協調折衷溫度並加裝風扇循環", baseChance: 60, statCheck: "eq", success: { effect: { eq: 7, reputation: 5 }, log: "✅ [成功] 完美解法，雙方皆大歡喜！" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 兩邊都不買單。" } },
+            { text: "【冒險】自費購買涼爽手持扇分送給外勤同仁", baseChance: 30, statCheck: "reputation", success: { effect: { reputation: 10, eq: 8, money: -600 }, log: "🎉 [大成功] 貼心暖男！外勤弟兄感念在心。" }, fail: { effect: { money: -600 }, log: "💥 [慘烈失敗] 大家收下後依然繼續爭吵。" } }
+        ]},
+        { title: "局內退休歡送會主持", desc: "老站長即將退休，主管希望你擔任歡送會司儀...", options: [
+            { text: "【穩健】照著稿子隆重溫馨地完成主持", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, reputation: 3 }, log: "✅ [成功] 典禮圓滿落幕。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 過程稍微照本宣科。" } },
+            { text: "【平衡】製作老站長多年工作的溫馨紀念影片", baseChance: 60, statCheck: "adaptability", success: { effect: { eq: 9, reputation: 8 }, log: "✅ [成功] 全場感動落淚，高層高度肯定！" }, fail: { effect: { stamina: -4 }, log: "❌ [失敗] 影片製作耗時影響休息。" } },
+            { text: "【冒險】安排驚喜環節，請來老站長首批服務的民眾", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 15, eq: 10 }, log: "🎉 [大成功] 傳奇場面！載入局內史冊的歡送會！" }, fail: { effect: { eq: -8, performance: -5 }, log: "💥 [慘烈失敗] 聯絡失誤，嘉賓當天未出現。" } }
+        ]},
+        { title: "職場健康檢查報告", desc: "年度健檢出來，主管關注大家的腰椎與膝蓋健康...", options: [
+            { text: "【穩健】按醫囑維護健康，保持規律作息", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: 3, performance: 2 }, log: "✅ [成功] 身體指標維持良好。" }, fail: { effect: { stamina: -2 }, log: "❌ [失敗] 部分指標稍微偏高。" } },
+            { text: "【平衡】發起局內職場拉筋伸展操運動", baseChance: 60, statCheck: "stamina", success: { effect: { stamina: 5, reputation: 6 }, log: "✅ [成功] 帶動全員運動風氣，身體變好！" }, fail: { effect: { reputation: -3 }, log: "❌ [失敗] 響應人數寥寥無幾。" } },
+            { text: "【冒險】爭取局內採購人體工學分揀座椅與護腰", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 10, performance: 8 }, log: "🎉 [大成功] 爭取成功！大幅減輕同仁職業傷害！" }, fail: { effect: { performance: -5 }, log: "💥 [慘烈失敗] 預算不足被退回。" } }
+        ]},
+        { title: "主管提攜升遷考核面談", desc: "主管私下詢問你是否有意願準備升遷內部考試...", options: [
+            { text: "【穩健】表達會努力準備，一步一腳印", baseChance: 85, statCheck: "performance", success: { effect: { performance: 4, reputation: 3 }, log: "✅ [成功] 留下踏實可靠的印象。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 顯得缺乏衝勁。" } },
+            { text: "【平衡】展示近年的優秀績效數據與改善成果", baseChance: 60, statCheck: "performance", success: { effect: { performance: 8, reputation: 7 }, log: "✅ [成功] 數據亮眼，列入重點培訓名單！" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 被認為有些自大。" } },
+            { text: "【冒險】當場立下明年KPI承諾以換取推薦名額", baseChance: 20, statCheck: "performance", success: { effect: { performance: 12, reputation: 10 }, log: "🎉 [大成功] 展現強烈企圖心，獲得優先推薦！" }, fail: { effect: { performance: -10, eq: -6 }, log: "💥 [慘烈失敗] 被認為好高鶩遠。" } }
+        ]},
+        { title: "局內通訊群組訊息誤發", desc: "有同仁不小心將私下抱怨的訊息發到了全局大群組...", options: [
+            { text: "【穩健】保持沉默，不發言也不點讚", baseChance: 90, statCheck: "eq", success: { effect: { eq: 4 }, log: "✅ [成功] 明哲保身，未捲入風波。" }, fail: { effect: { eq: -1 }, log: "❌ [失敗] 場面極度尷尬。" } },
+            { text: "【平衡】迅速發送多條公務訊息將尷尬訊息刷過去", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 6 }, log: "✅ [成功] 高情商救場！該同仁感激涕零。" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 刷屏失敗，反而引起更多關注。" } },
+            { text: "【冒險】私訊主管緩和氣氛，替該同仁緩頰說情", baseChance: 25, statCheck: "eq", success: { effect: { eq: 10, reputation: 8 }, log: "🎉 [大成功] 成功化解一場職場風暴！" }, fail: { effect: { performance: -8, eq: -8 }, log: "💥 [慘烈失敗] 連帶被主管懷疑是一夥的。" } }
+        ]},
+        { title: "新舊郵務機車汰換分配", desc: "局裡到貨一批全新高性能電動郵務車...", options: [
+            { text: "【穩健】遵守按資歷排隊分配的規則", baseChance: 85, statCheck: "performance", success: { effect: { performance: 3, adaptability: 2 }, log: "✅ [成功] 平穩獲得車輛更新。" }, fail: { effect: { adaptability: -2 }, log: "❌ [失敗] 只能繼續騎舊車。" } },
+            { text: "【平衡】以自願主動測試新車性能為由申請優先試騎", baseChance: 55, statCheck: "adaptability", success: { effect: { adaptability: 7, performance: 5 }, log: "✅ [成功] 順利提前牽到馬力十足的新車！" }, fail: { effect: { reputation: -4 }, log: "❌ [失敗] 被同仁認為插隊。" } },
+            { text: "【冒險】申請將舊車留給自己，將新車名額讓給後輩", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 12, eq: 8 }, log: "🎉 [大成功] 風範令人敬佩，獲選年度優秀員工！" }, fail: { effect: { stamina: -6 }, log: "💥 [慘烈失敗] 舊車頻繁故障，影響投遞。" } }
+        ]},
+        { title: "年終尾牙表演節目籌備", desc: "各部門需出一個表演節目，主管希望你出馬...", options: [
+            { text: "【穩健】參與團體合唱，輕鬆完成任務", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4 }, log: "✅ [成功] 順利完成表演。" }, fail: { effect: { eq: -2 }, log: "❌ [失敗] 毫無存在感。" } },
+            { text: "【平衡】表演個人拿手才藝（如吉他或魔術）", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 6 }, log: "✅ [成功] 才藝驚豔全場，好評如潮！" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 演出中途稍微失誤。" } },
+            { text: "【冒險】編排幽默反串郵務日常的搞笑相聲", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 12, eq: 10, money: 1000 }, log: "🎉 [大成功] 全場爆笑！拿下尾牙節目第一名大獎！" }, fail: { effect: { reputation: -8, eq: -6 }, log: "💥 [慘烈失敗] 笑點太冷，現場一片寂靜。" } }
+        ]}
+    ],
+
+    // 第三類：其他可能會遇到的事情 / 生涯意外 (20個)
+    life: [
+        {
+            title: "路遇突發車禍急救救援",
+            desc: "投遞途中目擊騎士倒地受傷，傷勢不明...",
+            options: [
+                { text: "【穩健】立即停車協助設置警示牌並幫忙撥打119", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, reputation: 4 }, log: "✅ [成功] 處置標準，順利協助救護車趕到。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 耽誤了部分郵件時間。" } },
+                { text: "【平衡】運用局內急救培訓知識，進行初步止血", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 8, reputation: 8 }, log: "✅ [成功] 成功為傷者止血，獲家屬深深致謝！" }, fail: { effect: { adaptability: -3, stamina: -3 }, log: "❌ [失敗] 手忙腳亂，衣服沾滿泥水。" } },
+                { text: "【冒險】背起傷者直接送往兩百公尺外的診所急救", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 15, stamina: -4, money: 3000 }, log: "🎉 [大成功] 見義勇為登上新聞頭條！獲特別表揚！" }, fail: { effect: { stamina: -10, performance: -6 }, log: "💥 [慘烈失敗] 施力不當導致自己腰部拉傷。" } }
+            ]
+        },
+        {
+            title: "拾獲裝有鉅款的皮夾", desc: "在路邊信箱旁撿到一個夾層塞滿現金的皮夾...", options: [
+                { text: "【穩健】立即送往附近警察局，依規定報案登記", baseChance: 90, statCheck: "reputation", success: { effect: { reputation: 6, eq: 3 }, log: "✅ [成功] 拾金不昧，展現郵務人員良好品德。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 製作警局筆錄耗費時間。" } },
+                { text: "【平衡】透過皮夾內名片直接聯繫失主領回", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 6, money: 1000 }, log: "✅ [成功] 失主感激涕零，堅持給予懸賞紅包！" }, fail: { effect: { eq: -4 }, log: "❌ [失敗] 失主疑心重，反覆核對金額。" } },
+                { text: "【冒險】暫存郵車，送完此區郵件後再處理", baseChance: 20, statCheck: "adaptability", success: { effect: { adaptability: 5, money: 500 }, log: "🎉 [大成功] 時間管理得當，後續順利還給失主。" }, fail: { effect: { reputation: -10, performance: -10 }, log: "💥 [慘烈失敗] 被失主定位發現，誤會你想侵占！" } }
+            ]
+        },
+        {
+            title: "中古郵務個人裝備升級", desc: "市面上出現一款能大幅減輕負擔的自費護腰裝備...", options: [
+                { text: "【穩健】維持現狀，使用局裡發放的標準裝備", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: 1 }, log: "✅ [成功] 節省開支，平穩使用。" }, fail: { effect: { stamina: -2 }, log: "❌ [失敗] 舊裝備防護有限。" } },
+                { text: "【平衡】自費購買中階護腰與高彈性減震鞋墊", baseChance: 70, statCheck: "stamina", success: { effect: { stamina: 6, money: -1500 }, log: "✅ [成功] 身體負擔大減，投遞體力消耗下降！" }, fail: { effect: { money: -1500 }, log: "❌ [失敗] 產品效果不如廣告宣稱。" } },
+                { text: "【冒險】重金購入外骨骼輔助穿戴裝備試用", baseChance: 30, statCheck: "adaptability", success: { effect: { stamina: 12, reputation: 8, money: -5000 }, log: "🎉 [大成功] 黑科技加持！走路如飛，體力爆棚！" }, fail: { effect: { money: -5000, stamina: -5 }, log: "💥 [慘烈失敗] 設備沉重且笨重，完全不實用。" } }
+            ]
+        },
+        {
+            title: "地方社區公益志願服務", desc: "社區舉辦週末獨居長者關懷活動，邀請郵差參與...", options: [
+                { text: "【穩健】報名參加半天志工，協助發放物資", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, reputation: 4 }, log: "✅ [成功] 收穫心靈滿足與良好聲望。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 假日休息時間減少。" } },
+                { text: "【平衡】發揮郵差優勢，協助設計長者防詐宣導", baseChance: 60, statCheck: "adaptability", success: { effect: { reputation: 8, performance: 6 }, log: "✅ [成功] 宣導大獲成功，獲地方新聞報導！" }, fail: { effect: { eq: -3 }, log: "❌ [失敗] 長者反應較為冷淡。" } },
+                { text: "【冒險】號召全局同仁組成「郵愛志工隊」擴大舉辦", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 15, performance: 10 }, log: "🎉 [大成功] 成為地方重大佳話！獲得總局表揚！" }, fail: { effect: { reputation: -6, stamina: -6 }, log: "💥 [慘烈失敗] 組織動員失敗，場面冷清。" } }
+            ]
+        },
+        {
+            title: "個人理財與儲蓄規劃", desc: "手頭累積了一筆辛苦積攢的積蓄，考慮如何規劃...", options: [
+                { text: "【穩健】選擇郵政定期儲蓄，穩健拿取利息", baseChance: 90, statCheck: "adaptability", success: { effect: { money: 10000 }, log: "✅ [成功] 資金安全，穩健獲利。" }, fail: { effect: { money: 2000 }, log: "❌ [失敗] 通膨下收益較有限。" } },
+                { text: "【平衡】投入穩健型ETF與高股息基金", baseChance: 60, statCheck: "adaptability", success: { effect: { money: 25000 }, log: "✅ [成功] 投資有方，資產迎來可觀增值！" }, fail: { effect: { money: -5000 }, log: "❌ [失敗] 市場波動遭遇小額虧損。" } },
+                { text: "【冒險】聽信朋友消息，全押高風險熱門股票！", baseChance: 25, statCheck: "adaptability", success: { effect: { money: 80000 }, log: "🎉 [大成功] 股票暴漲！一夜翻身小富翁！" }, fail: { effect: { money: -30000 }, log: "💥 [慘烈失敗] 遭遇跌停慘重套牢，虧損過半！" } }
+            ]
+        },
+        { title: "路邊小狗遭棄養拯救", desc: "在廢棄郵箱旁發現一隻被遺棄的小幼犬...", options: [
+            { text: "【穩健】拍照通報動保處前來收容處理", baseChance: 85, statCheck: "eq", success: { effect: { eq: 3 }, log: "✅ [成功] 妥善處置，小狗得到救援。" }, fail: { effect: { eq: -1 }, log: "❌ [失敗] 等待動保處時間稍長。" } },
+            { text: "【平衡】帶去獸醫診所檢查並發文尋求領養", baseChance: 60, statCheck: "eq", success: { effect: { eq: 7, reputation: 5, money: -500 }, log: "✅ [成功] 成功幫小狗找到溫暖新家！" }, fail: { effect: { money: -1000 }, log: "❌ [失敗] 負擔了醫藥費但久久無人領養。" } },
+            { text: "【冒險】收養小狗並訓練成局裡的「郵務吉祥物」", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 12, eq: 8 }, log: "🎉 [大成功] 狗狗成為爆紅吉祥物，全局團寵！" }, fail: { effect: { money: -3000, stamina: -4 }, log: "💥 [慘烈失敗] 狗狗在局裡亂咬郵件遭到訓斥。" } }
+        ]},
+        { title: "颱風前夕居家防颱準備", desc: "強烈颱風即將登陸，家中需要做防颱整備...", options: [
+            { text: "【穩健】採買防颱物資，貼好門窗玻璃防風", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 3, stamina: 2 }, log: "✅ [成功] 家中安然無恙度過風災。" }, fail: { effect: { money: -500 }, log: "❌ [失敗] 物資買多了有些浪費。" } },
+            { text: "【平衡】主動協助左鄰右舍清理排水溝與防颱", baseChance: 60, statCheck: "eq", success: { effect: { reputation: 7, eq: 6 }, log: "✅ [成功] 社區熱心好鄰居，聲望大增！" }, fail: { effect: { stamina: -5 }, log: "❌ [失敗] 累得滿頭大汗。" } },
+            { text: "【冒險】志願加入防災防颱應變支援小組", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 12, performance: 8 }, log: "🎉 [大成功] 協助防颱有功，獲得市府表揚！" }, fail: { effect: { stamina: -10 }, log: "💥 [慘烈失敗] 風雨中清理倒樹不慎拉傷。" } }
+        ]},
+        { title: "意外抽中免費雙人旅遊券", desc: "參加超商抽獎意外抽中免費豪華三日遊...", options: [
+            { text: "【穩健】安排休假帶家人前往放鬆身心", baseChance: 85, statCheck: "eq", success: { effect: { stamina: 6, eq: 4 }, log: "✅ [成功] 身心獲得充份放鬆，體力大復原！" }, fail: { effect: { stamina: 1 }, log: "❌ [失敗] 旅程安排有些倉促。" } },
+            { text: "【平衡】將旅遊券轉賣換取現金積蓄", baseChance: 70, statCheck: "adaptability", success: { effect: { money: 6000 }, log: "✅ [成功] 順利變現，補貼家用！" }, fail: { effect: { money: 2000 }, log: "❌ [失敗] 折價較多才賣出。" } },
+            { text: "【冒險】將旅遊券作為局內辛苦同仁的抽獎禮物", baseChance: 30, statCheck: "reputation", success: { effect: { reputation: 12, eq: 10 }, log: "🎉 [大成功] 無私大方！獲得全體同仁極高崇敬！" }, fail: { effect: { eq: -4 }, log: "💥 [慘烈失敗] 被部分人質疑是在作秀。" } }
+        ]},
+        { title: "路邊發現老舊廢棄信箱", desc: "路旁發現一個年代久遠、生鏽斑駁的珍貴舊信箱...", options: [
+            { text: "【穩健】通報局內文物組前來評估回收", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 3 }, log: "✅ [成功] 成功保護郵務歷史文物。" }, fail: { effect: { adaptability: -1 }, log: "❌ [失敗] 文物組評估價值不高。" } },
+            { text: "【平衡】利用業餘時間親自將其除鏽修復翻新", baseChance: 55, statCheck: "adaptability", success: { effect: { adaptability: 8, reputation: 6 }, log: "✅ [成功] 展示驚人工藝，被展示於局內大廳！" }, fail: { effect: { stamina: -4, money: -500 }, log: "❌ [失敗] 修復失敗，弄得滿身油污。" } },
+            { text: "【冒險】將修復過程拍攝成短影片上傳影音平台", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 15, money: 5000 }, log: "🎉 [大成功] 影片獲百萬觀看！成為郵務網紅！" }, fail: { effect: { reputation: -5 }, log: "💥 [慘烈失敗] 流量平平，白忙一場。" } }
+        ]},
+        { title: "參加全民馬拉松比賽", desc: "市府舉辦全民馬拉松，同仁邀你一同報名挑戰...", options: [
+            { text: "【穩健】報名 10 公里休閒組，輕鬆完賽", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: 4, eq: 2 }, log: "✅ [成功] 輕鬆完賽，運動鍛鍊身體。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 跑完後雙腿有些痠痛。" } },
+            { text: "【平衡】挑戰 21 公里半馬，爭取個人佳績", baseChance: 60, statCheck: "stamina", success: { effect: { stamina: 8, reputation: 5 }, log: "✅ [成功] 順利完賽並創下個人最佳紀錄！" }, fail: { effect: { stamina: -8 }, log: "❌ [失敗] 後半段抽筋，咬牙硬撐完賽。" } },
+            { text: "【冒險】穿著全套郵差制服挑戰 42 公里全馬！", baseChance: 20, statCheck: "stamina", success: { effect: { stamina: 10, reputation: 15 }, log: "🎉 [大成功] 綠衣郵差全馬完賽！全場為你喝采！" }, fail: { effect: { stamina: -15, money: -1000 }, log: "💥 [慘烈失敗] 體力透支中途棄賽，需就醫按摩。" } }
+        ]},
+        { title: "路遇小偷作案現場", desc: "送信途中發現一名小偷正在偷竊路邊機車...", options: [
+            { text: "【穩健】保持距離，立即撥打 110 報警並暗中觀察", baseChance: 90, statCheck: "adaptability", success: { effect: { adaptability: 4, reputation: 3 }, log: "✅ [成功] 警方迅速趕到將小偷人贓俱獲。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 小偷在警察趕到前逃逸。" } },
+            { text: "【平衡】大聲呵斥並拍照存證，嚇跑小偷", baseChance: 60, statCheck: "eq", success: { effect: { reputation: 7, adaptability: 5 }, log: "✅ [成功] 成功嚇退小偷，保住民眾財產！" }, fail: { effect: { eq: -3 }, log: "❌ [失敗] 小偷反向你嗆聲後逃跑。" } },
+            { text: "【冒險】英勇衝上前去，當場將小偷按倒在地！", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 15, stamina: 4, money: 2000 }, log: "🎉 [大成功] 擒賊英雄！警方頒發破案獎金！" }, fail: { effect: { stamina: -12, money: -1500 }, log: "💥 [慘烈失敗] 扭打中拉傷手腕且弄破衣物。" } }
+        ]},
+        { title: "購買彩券的意外時刻", desc: "經過彩券行，看到頭獎累積金額高達數億...", options: [
+            { text: "【穩健】買一張 50 元電腦選號試試手氣", baseChance: 85, statCheck: "adaptability", success: { effect: { money: 100 }, log: "✅ [成功] 中了小獎，開心小確幸。" }, fail: { effect: { money: -50 }, log: "❌ [失敗] 槓龜，權當做公益。" } },
+            { text: "【平衡】投資 500 元包號組合增加中獎率", baseChance: 50, statCheck: "adaptability", success: { effect: { money: 3000 }, log: "✅ [成功] 幸運中得數千元獎金！" }, fail: { effect: { money: -500 }, log: "❌ [失敗] 全數槓龜。" } },
+            { text: "【冒險】一口氣投注 3,000 元衝刺大獎！", baseChance: 15, statCheck: "adaptability", success: { effect: { money: 50000 }, log: "🎉 [大成功] 命中三獎！爆賺一大筆獎金！" }, fail: { effect: { money: -3000 }, log: "💥 [慘烈失敗] 3,000 元全打水漂。" } }
+        ]},
+        { title: "接獲詐騙電話騷擾", desc: "接到宣稱你帳戶涉及洗錢的驚悚詐騙電話...", options: [
+            { text: "【穩健】直接掛斷電話，不予理會", baseChance: 90, statCheck: "adaptability", success: { effect: { adaptability: 3 }, log: "✅ [成功] 機智防詐，不受影響。" }, fail: { effect: { eq: -1 }, log: "❌ [失敗] 心情稍微受干擾。" } },
+            { text: "【平衡】反向戲弄詐騙集團，浪費對方時間", baseChance: 60, statCheck: "eq", success: { effect: { eq: 7, adaptability: 4 }, log: "✅ [成功] 將對方耍得團團轉，心情大好！" }, fail: { effect: { eq: -3 }, log: "❌ [失敗] 被對方發現後遭怒罵。" } },
+            { text: "【冒險】配合演出並聯繫165反詐騙成功套出帳號", baseChance: 25, statCheck: "adaptability", success: { effect: { reputation: 10, performance: 8 }, log: "🎉 [大成功] 協助警方破獲車手帳戶！" }, fail: { effect: { eq: -5 }, log: "💥 [慘烈失敗] 浪費大量時間且無果。" } }
+        ]},
+        { title: "參與地方歷史文化導覽", desc: "地方文化局舉辦郵務歷史導覽，邀請資深郵差分享...", options: [
+            { text: "【穩健】出席聽講，支持地方文化活動", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, reputation: 2 }, log: "✅ [成功] 增廣見聞，充實生活。" }, fail: { effect: { stamina: -2 }, log: "❌ [失敗] 內容稍微枯燥。" } },
+            { text: "【平衡】上台分享自己多年的在地投遞有趣見聞", baseChance: 60, statCheck: "eq", success: { effect: { reputation: 8, eq: 6 }, log: "✅ [成功] 生動故事深受民眾喜愛！" }, fail: { effect: { eq: -3 }, log: "❌ [失敗] 緊張導致表達不夠流暢。" } },
+            { text: "【冒險】設計一條「郵差視角」的私房巷弄導覽路線", baseChance: 25, statCheck: "adaptability", success: { effect: { reputation: 12, adaptability: 8 }, log: "🎉 [大成功] 路線成為熱門文青觀光景點！" }, fail: { effect: { performance: -4 }, log: "💥 [慘烈失敗] 路線過於冷門，參與者稀少。" } }
+        ]},
+        { title: "機車考照經驗指導", desc: "鄰居年輕人考了三次機車路考都沒過，向你求助...", options: [
+            { text: "【穩健】分享標準考照要點與注意事項", baseChance: 85, statCheck: "eq", success: { effect: { eq: 4, reputation: 3 }, log: "✅ [成功] 鄰居深受啟發。" }, fail: { effect: { eq: -1 }, log: "❌ [失敗] 鄰居依舊緊張。" } },
+            { text: "【平衡】假日帶他去練習場進行實戰特訓", baseChance: 60, statCheck: "adaptability", success: { effect: { reputation: 8, eq: 6 }, log: "✅ [成功] 特訓成功！鄰居順利考取駕照！" }, fail: { effect: { stamina: -4 }, log: "❌ [失敗] 鄰居第四次依然殘念。" } },
+            { text: "【冒險】傳授郵差專用的「超高重車平衡技巧」", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 12, adaptability: 6 }, log: "🎉 [大成功] 鄰居技術大躍進，以滿分通過！" }, fail: { effect: { money: -1000 }, log: "💥 [慘烈失敗] 練習中鄰居不慎倒車壓壞零件。" } }
+        ]},
+        { title: "老舊房屋水管漏水意外", desc: "下班回家發現家中水管破裂，客廳水浸...", options: [
+            { text: "【穩健】關閉總開關，請專業水電工前來修繕", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 3, money: -1000 }, log: "✅ [成功] 花錢消災，順利修復。" }, fail: { effect: { money: -2000 }, log: "❌ [失敗] 夜間加收昂貴維修費。" } },
+            { text: "【平衡】發揮動手能力，自行購買零件更換修復", baseChance: 55, statCheck: "adaptability", success: { effect: { adaptability: 7, money: -200 }, log: "✅ [成功] 展現水電天賦，省下大筆維修費！" }, fail: { effect: { stamina: -5, money: -1500 }, log: "❌ [失敗] 修理失敗反而讓漏水更嚴重。" } },
+            { text: "【冒險】聯繫熟識的同仁熱心前來幫忙搶修", baseChance: 30, statCheck: "reputation", success: { effect: { eq: 8, reputation: 6, money: -300 }, log: "🎉 [大成功] 同仁神救援，快速搞定兼聚餐！" }, fail: { effect: { eq: -5, money: -1000 }, log: "💥 [慘烈失敗] 弄得兩人一身濕，尷尬落幕。" } }
+        ]},
+        { title: "參與捐血車公益捐血", desc: "街角停著捐血車，工作人員宣導血庫告急...", options: [
+            { text: "【穩健】捐血 250cc，適度奉獻愛心", baseChance: 85, statCheck: "stamina", success: { effect: { reputation: 4, stamina: -2 }, log: "✅ [成功] 捐血救人，獲得紀念品。" }, fail: { effect: { stamina: -4 }, log: "❌ [失敗] 稍微有些頭暈休息了一會。" } },
+            { text: "【平衡】體能狀況良好，一口氣捐血 500cc", baseChance: 60, statCheck: "stamina", success: { effect: { reputation: 8, stamina: -3 }, log: "✅ [成功] 熱血澎湃！獲頒捐血榮譽獎狀！" }, fail: { effect: { stamina: -8 }, log: "❌ [失敗] 下午感覺較為疲倦。" } },
+            { text: "【冒險】號召整條街的住戶與店家一同下樓捐血", baseChance: 25, statCheck: "reputation", success: { effect: { reputation: 15, eq: 10 }, log: "🎉 [大成功] 捐血車被擠爆！獲捐血中心特別致謝！" }, fail: { effect: { eq: -4 }, log: "💥 [慘烈失敗] 響應冷清，氣氛略顯尷尬。" } }
+        ]},
+        { title: "二手市場淘寶經驗", desc: "假日在二手市集看到一個疑似古董的舊郵務包裹秤...", options: [
+            { text: "【穩健】冷靜觀望，不隨意購買", baseChance: 90, statCheck: "adaptability", success: { effect: { adaptability: 2 }, log: "✅ [成功] 理性消費，避免浪費。" }, fail: { effect: { adaptability: -1 }, log: "❌ [失敗] 事後覺得有些可惜。" } },
+            { text: "【平衡】憑專業知識殺價後買下作為收藏", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 6, money: 3000 }, log: "✅ [成功] 的確是古董！轉手賺取數千元！" }, fail: { effect: { money: -1000 }, log: "❌ [失敗] 買回家發現是近代仿製品。" } },
+            { text: "【冒險】花高價買下並送交博物館鑑定", baseChance: 20, statCheck: "adaptability", success: { effect: { reputation: 15, money: 20000 }, log: "🎉 [大成功] 國家級珍貴文物！獲得高額獎金！" }, fail: { effect: { money: -5000 }, log: "💥 [慘烈失敗] 鑑定為普通舊物，損失慘重。" } }
+        ]},
+        { title: "意外獲得熱門演唱會門票", desc: "幸運抽中極難購買的當紅巨星演唱會門票...", options: [
+            { text: "【穩健】親自前往觀賞，享受音樂盛宴", baseChance: 85, statCheck: "eq", success: { effect: { stamina: 5, eq: 5 }, log: "✅ [成功] 徹底放鬆，心靈獲得滋養！" }, fail: { effect: { stamina: -2 }, log: "❌ [失敗] 現場過於擁擠疲憊。" } },
+            { text: "【平衡】高價轉售給極度想去的歌迷朋友", baseChance: 70, statCheck: "adaptability", success: { effect: { money: 8000 }, log: "✅ [成功] 順利變現，獲得豐厚利潤！" }, fail: { effect: { money: 2000 }, log: "❌ [失敗] 售價低於預期。" } },
+            { text: "【冒險】將門票送給主管作為年終感謝禮", baseChance: 25, statCheck: "eq", success: { effect: { performance: 12, reputation: 8 }, log: "🎉 [大成功] 主管女兒是狂熱粉！對你感激不盡！" }, fail: { effect: { eq: -6, performance: -4 }, log: "💥 [慘烈失敗] 被質疑行賄，引發不必要誤會。" } }
+        ]},
+        { title: "年度個人職涯回顧與反思", desc: "年末獨自坐在公園，回首這一年的郵務歲月...", options: [
+            { text: "【穩健】寫下工作日誌，歸納明年改進目標", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 3 }, log: "✅ [成功] 踏實反思，心態更趨成熟。" }, fail: { effect: { adaptability: -1 }, log: "❌ [失敗] 稍微感到些許迷茫。" } },
+            { text: "【平衡】約三五好友聚餐，分享工作甘苦談", baseChance: 65, statCheck: "eq", success: { effect: { eq: 7, stamina: 4, money: -500 }, log: "✅ [成功] 友情加溫，情緒獲得良好宣洩！" }, fail: { effect: { money: -500 }, log: "❌ [失敗] 大家各忙各的難以約齊。" } },
+            { text: "【冒險】將自己多年的郵差心得撰寫成書投稿", baseChance: 20, statCheck: "reputation", success: { effect: { reputation: 18, money: 15000 }, log: "🎉 [大成功] 成功出版暢銷書！成為知名郵務作家！" }, fail: { effect: { performance: -4 }, log: "💥 [慘烈失敗] 投稿遭到多家出版社退稿。" } }
+        ]}
+    ]
+};
+
+function startGame() {
+    const nameInput = document.getElementById('player-name').value.trim();
+    if (!nameInput) return alert("請輸入姓名！");
+
+    player.name = nameInput;
+    player.startAge = parseInt(document.getElementById('start-age').value);
+    player.age = player.startAge;
+
+    player.maxStaminaCap = player.startAge > 40 ? 60 : 80;
+
+    // 五維隨機數值 20-80
+    player.eq = getRandomInt(20, 80);
+    player.reputation = getRandomInt(20, 80);
+    player.adaptability = getRandomInt(20, 80);
+    player.performance = getRandomInt(20, 80);
+    player.stamina = getRandomInt(20, player.maxStaminaCap);
+
+    player.currentPhase = 1;
+
+    document.getElementById('setup-screen').classList.add('hidden');
+    document.getElementById('game-screen').classList.remove('hidden');
+    document.getElementById('display-name').innerText = player.name + " 郵務士";
+
+    let capNotice = player.startAge > 40 ? "（因入職超過 40 歲，體力上限限制為 60 分）" : "";
+    addLog(`[報到] ${player.name} 正式報到，天賦能力隨機生成完畢${capNotice}。`);
+    
+    startYearProcess();
+}
+
+function startYearProcess() {
+    if (player.age >= player.retireAge) return endGame();
+
+    let serviceYear = (player.age - player.startAge) + 1;
+    let salaryData = calculateSalary(serviceYear);
+    
+    // 每年的階段 1 開始時給付年薪
+    if (player.currentPhase === 1) {
+        player.money += salaryData.amount;
+        addLog(`💰 [發薪] 領取第 ${serviceYear} 年年薪：+$${salaryData.displayWan} 萬元。`);
+    }
+
+    document.getElementById('display-career').innerHTML = salaryData.statusTag;
+    document.getElementById('salary-display').innerText = `${salaryData.displayWan} 萬`;
+
+    loadPhaseEvent();
+}
+
+function loadPhaseEvent() {
+    let poolKey = player.currentPhase === 1 ? 'delivery' : (player.currentPhase === 2 ? 'workplace' : 'life');
+    let phaseName = player.currentPhase === 1 ? '階段 1/3：🚚 投遞日常事件' : (player.currentPhase === 2 ? '階段 2/3：🏢 職場與同僚互動' : '階段 3/3：🎲 突發與生活意外');
+
+    document.getElementById('phase-tag').innerText = phaseName;
+
+    let pool = eventDatabase[poolKey];
+    let currentEvent = pool[Math.floor(Math.random() * pool.length)];
+
+    document.getElementById('story-text').innerHTML = `
+        <strong>【${player.age} 歲】${currentEvent.title}</strong><br>
+        ${currentEvent.desc}
+    `;
+
+    const optionsContainer = document.getElementById('options');
+    optionsContainer.innerHTML = '';
+
+    currentEvent.options.forEach(opt => {
+        let playerStat = player[opt.statCheck] || 50;
+        let finalChance = Math.min(95, Math.max(5, opt.baseChance + Math.round((playerStat - 50) * 0.4)));
+
+        let badgeClass = finalChance >= 75 ? 'chance-high' : (finalChance >= 45 ? 'chance-med' : 'chance-low');
+        let badgeText = finalChance >= 75 ? '高成功率' : (finalChance >= 45 ? '中合理性' : '高風險高回報');
+
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `
+            <span>${opt.text}</span>
+            <span class="chance-badge ${badgeClass}">${badgeText} (${finalChance}%)</span>
+        `;
+        btn.onclick = () => makeChoice(opt, finalChance);
+        optionsContainer.appendChild(btn);
+    });
+
+    updateUI();
+}
+
+function clampStat(statName, val) {
+    let max = (statName === 'stamina') ? player.maxStaminaCap : 80;
+    return Math.max(20, Math.min(max, val));
+}
+
+function makeChoice(option, finalChance) {
+    let roll = Math.floor(Math.random() * 100) + 1;
+    let isSuccess = roll <= finalChance;
+    let result = isSuccess ? option.success : option.fail;
+
+    if (result.effect) {
+        ['stamina', 'eq', 'reputation', 'adaptability', 'performance'].forEach(s => {
+            if (result.effect[s]) {
+                player[s] = clampStat(s, player[s] + result.effect[s]);
+            }
+        });
+        if (result.effect.money) player.money += result.effect.money;
+    }
+
+    addLog(`[${player.age}歲-階段${player.currentPhase}] ${result.log}`, isSuccess);
+
+    // 推進階段
+    if (player.currentPhase < 3) {
+        player.currentPhase++;
+        loadPhaseEvent();
+    } else {
+        // 完成當年度三個階段，年齡 +1，重置階段為 1
+        player.currentPhase = 1;
+        player.age++;
+        startYearProcess();
+    }
+}
+
+function getRankClass(val) {
+    if (val <= 30) return 'rank-poor';
+    if (val <= 40) return 'rank-below';
+    if (val <= 50) return 'rank-avg';
+    if (val <= 60) return 'rank-above';
+    return 'rank-elite';
+}
+
+function updateUI() {
+    document.getElementById('age').innerText = player.age;
+    document.getElementById('years-left').innerText = player.retireAge - player.age;
+    document.getElementById('money').innerText = `$${(player.money / 10000).toFixed(1)} 萬`;
+
+    ['stamina', 'eq', 'reputation', 'adaptability', 'performance'].forEach(stat => {
+        const el = document.getElementById(stat);
+        el.innerText = player[stat];
+        el.className = `stat-val ${getRankClass(player[stat])}`;
+    });
+}
+
+function addLog(text, isSuccess = true) {
+    const logBox = document.getElementById('log');
+    const newEntry = document.createElement('div');
+    newEntry.className = isSuccess ? 'log-success' : 'log-fail';
+    newEntry.innerText = text;
+    logBox.prepend(newEntry);
+}
+
+function endGame() {
+    let serviceYears = player.retireAge - player.startAge;
+    let avgStat = Math.round((player.stamina + player.eq + player.reputation + player.adaptability + player.performance) / 5);
+
+    document.getElementById('story-text').innerHTML = `
+        <h3 style="color:#ffeb3b; margin-top:0;">🎉 榮退紀念章 (生涯結算)</h3>
+        <strong>${player.name} 郵務士，恭喜你順利退休！</strong><br>
+        服役長達 ${serviceYears} 年，終點五維平均為 <strong class="${getRankClass(avgStat)}">${avgStat} 分</strong>。<br>
+        累積資產：$${(player.money / 10000).toFixed(1)} 萬元。
+    `;
+    document.getElementById('options').innerHTML = `<button onclick="location.reload()" class="start-btn">重新開始新職涯</button>`;
+}
+</script>
+</body>
+</html>
