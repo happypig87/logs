@@ -3,152 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 綠畜模擬器 - 郵務人生 </title>
+    <title>綠畜模擬器 - 郵務人生擴充版</title>
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #game-card {
-            background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 750px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .header {
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            background: #2a2a2a;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 13px;
-        }
+        body { background-color: #121212; color: #e0e0e0; font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        #game-card { background: #1e1e1e; border: 1px solid #333; border-radius: 12px; width: 100%; max-width: 800px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .header { border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; background: #2a2a2a; padding: 12px; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 13px; }
         .stat-box { display: flex; flex-direction: column; align-items: center; }
         .stat-val { font-weight: bold; font-size: 18px; margin-top: 4px; }
-        
-        .rank-poor { color: #f44336; }
-        .rank-below { color: #ff9800; }
-        .rank-avg { color: #ffeb3b; }
-        .rank-above { color: #8bc34a; }
-        .rank-elite { color: #00e676; }
-
-        .finance-bar {
-            display: flex;
-            justify-content: space-between;
-            background: #252525;
-            padding: 10px 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        .phase-indicator {
-            background: #2196f3;
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin-bottom: 10px;
-        }
-
-        #story-text {
-            font-size: 15px;
-            line-height: 1.6;
-            min-height: 80px;
-            margin-bottom: 20px;
-            background: #252525;
-            padding: 15px;
-            border-left: 4px solid #2196f3;
-            border-radius: 4px;
-        }
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        button.option-btn {
-            background: #2c2c2c;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 14px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        button.option-btn:hover {
-            background: #3a3a3a;
-            border-color: #2196f3;
-            transform: translateY(-2px);
-        }
-        .chance-badge {
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-left: 10px;
-            white-space: nowrap;
-        }
-        .chance-high { background: #1b5e20; color: #81c784; }
-        .chance-med { background: #e65100; color: #ffb74d; }
-        .chance-low { background: #b71c1c; color: #e57373; }
-
+        .stat-desc { font-size: 11px; margin-top: 2px; }
+        .rank-80 { color: #00e676; } .rank-70 { color: #8bc34a; } .rank-60 { color: #00bcd4; } .rank-50 { color: #ffeb3b; } .rank-40 { color: #ff9800; } .rank-20 { color: #f44336; }
+        .finance-bar { display: flex; justify-content: space-between; background: #252525; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; }
+        .phase-indicator { background: #2196f3; color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        #story-text { font-size: 15px; line-height: 1.6; min-height: 80px; margin-bottom: 20px; background: #252525; padding: 15px; border-left: 4px solid #2196f3; border-radius: 4px; }
+        .options-container { display: flex; flex-direction: column; gap: 12px; }
+        button.option-btn { background: #2c2c2c; color: #fff; border: 1px solid #444; padding: 14px 18px; border-radius: 8px; font-size: 14px; cursor: pointer; text-align: left; transition: all 0.2s ease; display: flex; justify-content: space-between; align-items: center; }
+        button.option-btn:hover { background: #3a3a3a; border-color: #2196f3; transform: translateY(-2px); }
+        .chance-badge { font-size: 12px; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-left: 10px; white-space: nowrap; }
+        .chance-high { background: #1b5e20; color: #81c784; } .chance-med { background: #e65100; color: #ffb74d; } .chance-low { background: #b71c1c; color: #e57373; }
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-size: 14px; color: #bbb; }
-        input[type="text"], select {
-            width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444;
-            border-radius: 6px; color: #fff; font-size: 16px; box-sizing: border-box;
-        }
+        input[type="text"], select { width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #444; border-radius: 6px; color: #fff; font-size: 16px; box-sizing: border-box; }
         input[type="range"] { width: 100%; accent-color: #2196f3; }
-        .start-btn {
-            width: 100%; background: #2196f3; text-align: center; font-weight: bold;
-            font-size: 18px; margin-top: 10px; padding: 14px; border: none; border-radius: 6px; color: #fff; cursor: pointer;
-        }
+        .start-btn { width: 100%; background: #2196f3; text-align: center; font-weight: bold; font-size: 18px; margin-top: 10px; padding: 14px; border: none; border-radius: 6px; color: #fff; cursor: pointer; }
         .start-btn:hover { background: #1976d2; }
-        #log {
-            margin-top: 20px; font-size: 13px; color: #aaa; max-height: 140px;
-            overflow-y: auto; border-top: 1px solid #333; padding-top: 10px; line-height: 1.5;
-        }
+        #log { margin-top: 20px; font-size: 13px; color: #aaa; max-height: 140px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px; line-height: 1.5; }
         .hidden { display: none !important; }
-        .log-success { color: #81c784; }
-        .log-fail { color: #e57373; }
+        .log-success { color: #81c784; } .log-fail { color: #e57373; }
         .age-warning { color: #f44336; font-size: 12px; margin-top: 4px; display: none; }
-        
-        .bad-habit-tag {
-            background-color: #b71c1c;
-            color: #fff;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-left: 8px;
-        }
+        .bad-habit-tag { background-color: #b71c1c; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-left: 8px; }
     </style>
 </head>
 <body>
@@ -166,7 +49,7 @@
         <div class="form-group">
             <label for="start-age">入職年齡：<span id="age-val" style="color:#ffeb3b; font-weight:bold; font-size:18px;">22</span> 歲</label>
             <input type="range" id="start-age" min="18" max="50" value="22" oninput="onAgeChange(this.value)">
-            <div id="age-cap-tip" class="age-warning">⚠️ 入職年齡超過 40 歲：體力最高上限受限為 60 分。</div>
+            <div id="age-cap-tip" class="age-warning">⚠️ 入職年齡高於 40 歲：體力初始與最高上限受限為 60 分。</div>
         </div>
 
         <div class="form-group">
@@ -177,7 +60,7 @@
             </select>
         </div>
 
-        <button class="start-btn" onclick="startGame()">正式報到入職</button>
+        <button class="start-btn" onclick="startGame()">正式報到入職 (隨機五維素質)</button>
     </div>
 
     <div id="game-screen" class="hidden">
@@ -193,11 +76,11 @@
         </div>
 
         <div class="stats-grid">
-            <div class="stat-box">體力<span id="stamina" class="stat-val">50</span></div>
-            <div class="stat-box">情商<span id="eq" class="stat-val">50</span></div>
-            <div class="stat-box">職場聲望<span id="reputation" class="stat-val">50</span></div>
-            <div class="stat-box">應變能力<span id="adaptability" class="stat-val">50</span></div>
-            <div class="stat-box">工作評價<span id="performance" class="stat-val">50</span></div>
+            <div class="stat-box">體力<span id="stamina" class="stat-val">50</span><span id="stamina-desc" class="stat-desc"></span></div>
+            <div class="stat-box">情商<span id="eq" class="stat-val">50</span><span id="eq-desc" class="stat-desc"></span></div>
+            <div class="stat-box">職場聲望<span id="reputation" class="stat-val">50</span><span id="reputation-desc" class="stat-desc"></span></div>
+            <div class="stat-box">應變能力<span id="adaptability" class="stat-val">50</span><span id="adaptability-desc" class="stat-desc"></span></div>
+            <div class="stat-box">工作評價<span id="performance" class="stat-val">50</span><span id="performance-desc" class="stat-desc"></span></div>
         </div>
 
         <div class="finance-bar">
@@ -210,55 +93,36 @@
         </div>
 
         <div id="story-text">載入中...</div>
-
         <div id="options" class="options-container"></div>
-
         <div id="log">--- 履歷日誌 ---</div>
     </div>
 </div>
 
 <script>
 let player = {
-    name: "",
-    title: "郵務士",
-    dept: "混投部門", // 混投部門 或 快包部門
-    age: 18, 
-    startAge: 18, 
-    retireAge: 65,
+    name: "", title: "郵務士", dept: "混投部門", age: 18, startAge: 18, retireAge: 65,
     stamina: 50, eq: 50, reputation: 50, adaptability: 50, performance: 50,
-    money: 0,
-    maxStaminaCap: 80,
-    currentPhase: 1, // 1: 投遞問題, 2: 職場互動, 3: 生涯意外
-    badHabit: null, // "抽菸", "吃檳榔" 或 null
-    badHabitExpense: 0,
-    hasBeenProxyInspector: false,
-    isInspector: false,
-    refusedPromotion: false // 若哭求外勤留任後，不再詢問升等考試
+    money: 0, maxStaminaCap: 80, currentPhase: 1, badHabit: null, badHabitExpense: 0,
+    hasBeenProxyInspector: false, isInspector: false, refusedPromotion: false
 };
 
-const salaryTable = {
-    1: 76, 2: 84, 3: 86, 4: 88, 5: 90, 6: 94, 7: 94, 8: 99, 9: 101, 10: 103,
-    11: 106, 12: 107, 13: 109, 14: 110, 15: 111, 16: 113, 17: 115
-};
+const salaryTable = { 1: 76, 2: 84, 3: 86, 4: 88, 5: 90, 6: 94, 7: 94, 8: 99, 9: 101, 10: 103, 11: 106, 12: 107, 13: 109, 14: 110, 15: 111, 16: 113, 17: 115 };
 
 function calculateSalary(serviceYear) {
     let salaryInWan = serviceYear <= 17 ? salaryTable[serviceYear] : ((serviceYear - 18) % 5 + 1 === 5 ? 128 : 121);
-    if (player.isInspector) {
-        salaryInWan += 6; // 郵務稽查每年加薪6萬
-    }
-    return { amount: salaryInWan * 10000, displayWan: salaryInWan, statusTag: `年資第 ${serviceYear} 年` };
+    if (player.isInspector) salaryInWan += 6;
+    return { amount: salaryInWan * 10000, displayWan: salaryInWan };
 }
 
-function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
-function getRankClass(val) {
-    if (val >= 80) return 'rank-elite';
-    if (val >= 65) return 'rank-above';
-    if (val >= 45) return 'rank-avg';
-    if (val >= 25) return 'rank-below';
-    return 'rank-poor';
+function getScoutingReport(val) {
+    if (val >= 80) return { class: 'rank-80', label: '頂尖巨星' };
+    if (val >= 70) return { class: 'rank-70', label: '全明星' };
+    if (val >= 60) return { class: 'rank-60', label: '高於平均' };
+    if (val >= 50) return { class: 'rank-50', label: '聯盟平均' };
+    if (val >= 40) return { class: 'rank-40', label: '低於平均' };
+    return { class: 'rank-20', label: '顯低於平均' };
 }
 
 function onAgeChange(val) {
@@ -266,142 +130,216 @@ function onAgeChange(val) {
     document.getElementById('age-cap-tip').style.display = parseInt(val) > 40 ? 'block' : 'none';
 }
 
-// ================= 事件庫 =================
+// 輔助函式：快速建立高/中/低三合理的選項
+function createThreeOptions(opt1, opt2, opt3) {
+    return [
+        { text: "【高合理性】" + opt1.t, baseChance: 80, statCheck: opt1.s, success: opt1.sc, fail: opt1.fc },
+        { text: "【中合理性】" + opt2.t, baseChance: 55, statCheck: opt2.s, success: opt2.sc, fail: opt2.fc },
+        { text: "【低合理性】" + opt3.t, baseChance: 25, statCheck: opt3.s, success: opt3.sc, fail: opt3.fc }
+    ];
+}
+
+// ================= 事件庫 (每類 20 個) =================
 const eventDatabase = {
-    // 菜鳥專屬事件包 (入職前三年)
-    rookie: [
-        {
-            title: "菜鳥報到與條例背誦",
-            desc: "剛入職的前幾個月，局裡要求熟記郵務法規與分機路向，前輩在旁盯著看...",
-            options: [
-                { text: "【穩健】硬記死背，按部就班對照郵區手冊", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 2 }, log: "✅ [成功] 順利通過新人考核。" }, fail: { effect: { stamina: -3 }, log: "❌ [失敗] 效率偏低，挑燈夜戰耗費體力。" } },
-                { text: "【平衡】請教資深師傅口訣與口傳經驗", baseChance: 60, statCheck: "eq", success: { effect: { eq: 6, reputation: 4, adaptability: 3 }, log: "✅ [成功] 前輩傾囊相授，快速上手！" }, fail: { effect: { eq: -3 }, log: "❌ [失敗] 師傅態度冷淡，叫你自己翻書。" } }
-            ]
-        },
-        {
-            title: "菜鳥迷路記",
-            desc: "剛接手新區域，面對巷弄交錯的死胡同，完全迷失方向...",
-            options: [
-                { text: "【穩健】拿出紙本門牌地圖與手機反覆核對", baseChance: 80, statCheck: "adaptability", success: { effect: { adaptability: 5, performance: 2 }, log: "✅ [成功] 重新掌握方向，順利送達。" }, fail: { effect: { stamina: -4 }, log: "❌ [失敗] 繞了許多冤枉路。" } },
-                { text: "【冒險】憑直覺在小巷穿梭，嘗試尋找出口", baseChance: 35, statCheck: "stamina", success: { effect: { adaptability: 8, stamina: -2 }, log: "🎉 [大成功] 發現隱藏捷徑！" }, fail: { effect: { stamina: -8, performance: -4 }, log: "💥 [慘烈失敗] 徹底卡在死胡同，延誤投遞。" } }
-            ]
-        }
-    ],
-
-    // 老鳥專屬事件包 (超過50歲，較多減體力事件)
-    veteran: [
-        {
-            title: "老患腰傷發作",
-            desc: "長年騎車與搬運重物，今日搬運郵包時舊傷復發，腰部劇痛...",
-            options: [
-                { text: "【穩健】帶上護腰，減慢動作，放緩速度配送", baseChance: 80, statCheck: "stamina", success: { effect: { stamina: -6, performance: -2 }, log: "✅ [成功] 勉強支撐完當日工作。" }, fail: { effect: { stamina: -12 }, log: "❌ [失敗] 腰傷加劇，極度吃力。" } },
-                { text: "【平衡】請年輕後輩幫忙分擔最重的高樓件", baseChance: 65, statCheck: "reputation", success: { effect: { stamina: -3, eq: 3 }, log: "✅ [成功] 展現老鳥人緣，後輩義不容辭幫忙。" }, fail: { effect: { reputation: -4, eq: -3 }, log: "❌ [失敗] 後輩自己也忙不過來，只能硬撐。" } }
-            ]
-        },
-        {
-            title: "老眼昏花認字難",
-            desc: "傍晚光線暗淡，細小的掛號信字跡讓老花眼嚴重的你非常吃力...",
-            options: [
-                { text: "【穩健】拿出隨身放大鏡慢慢核對地址", baseChance: 85, statCheck: "adaptability", success: { effect: { stamina: -4, adaptability: 2 }, log: "✅ [成功] 雖然慢了點，但準確無誤。" }, fail: { effect: { stamina: -6 }, log: "❌ [失敗] 眼花頭暈，體力消耗大。" } },
-                { text: "【冒險】憑多年對住戶的印象直接投遞", baseChance: 40, statCheck: "adaptability", success: { effect: { performance: 5, stamina: -1 }, log: "🎉 [大成功] 憑經驗一眼認出收件人！" }, fail: { effect: { performance: -6, reputation: -5 }, log: "💥 [慘烈失敗] 投錯信箱引來住戶投訴。" } }
-            ]
-        }
-    ],
-
-    // 混投部門專屬事件
-    dept_mixed: [
-        {
-            title: "混投機車大包載重失衡",
-            desc: "機車後方綁滿平信大包與掛號袋，前腳踏處還塞滿小包裹，龍頭極重...",
-            options: [
-                { text: "【穩健】放慢車速，謹慎轉彎，平穩騎行", baseChance: 85, statCheck: "stamina", success: { effect: { stamina: -4, performance: 3 }, log: "✅ [成功] 安順送達，無驚無險。" }, fail: { effect: { stamina: -6 }, log: "❌ [失敗] 騎行非常吃力，手腕酸痛。" } },
-                { text: "【平衡】重新調配前後重心比例再出發", baseChance: 60, statCheck: "adaptability", success: { effect: { adaptability: 6, stamina: -2 }, log: "✅ [成功] 重心配比完美，騎乘感大增！" }, fail: { effect: { stamina: -5 }, log: "❌ [失敗] 調整半天依然頭重腳輕。" } }
-            ]
-        },
-        {
-            title: "無手機聯繫的門口等待",
-            desc: "混投部門未配發手機，掛號件按門鈴無人應門，無法電話聯繫...",
-            options: [
-                { text: "【穩健】依規開立招領單黏貼於門口", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 3, performance: 2 }, log: "✅ [成功] 按標準流程處置。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 住戶事後抱怨未多等候。" } },
-                { text: "【冒險】借用路過民眾或超商電話打給住戶", baseChance: 35, statCheck: "eq", success: { effect: { eq: 7, performance: 6 }, log: "🎉 [大成功] 順利聯絡上住戶下樓簽收！" }, fail: { effect: { eq: -4 }, log: "💥 [慘烈失敗] 被當成陌生騷擾電話拒接。" } }
-            ]
-        }
-    ],
-
-    // 快包部門專屬事件
-    dept_express: [
-        {
-            title: "快捷大件車位難尋",
-            desc: "開著郵務汽車載滿急件大包裹，商業區路邊停滿車輛，無處停車...",
-            options: [
-                { text: "【穩健】停至付費停車場，再用推車推大包裹進大樓", baseChance: 80, statCheck: "stamina", success: { effect: { stamina: -5, money: -100, performance: 3 }, log: "✅ [成功] 雖然花錢耗體力，但合規完成。" }, fail: { effect: { stamina: -8 }, log: "❌ [失敗] 距離過遠，搬運極度勞累。" } },
-                { text: "【冒險】臨停黃線並透過配發公務手機迅速聯絡客戶秒領", baseChance: 50, statCheck: "adaptability", success: { effect: { adaptability: 7, performance: 6 }, log: "🎉 [大成功] 客戶迅速下樓取件，完美省時！" }, fail: { effect: { money: -600, performance: -4 }, log: "💥 [慘烈失敗] 遭警察開立違規臨停罰單。" } }
-            ]
-        },
-        {
-            title: "快捷急件限時倒數", desc: "手上有數件限時快捷包裹即將超過承諾送達時間...", options: [
-                { text: "【穩健】打公務電話確認客戶位置，優化汽車行駛路線", baseChance: 75, statCheck: "adaptability", success: { effect: { adaptability: 6, performance: 5 }, log: "✅ [成功] 精準壓線完成急件送達！" }, fail: { effect: { performance: -4 }, log: "❌ [失敗] 塞車嚴重，一件稍微逾時。" } },
-                { text: "【冒險】抄近路穿過狹窄舊街區", baseChance: 30, statCheck: "adaptability", success: { effect: { performance: 10, reputation: 5 }, log: "🎉 [大成功] 甩開塞車，提前半小時全部送達！" }, fail: { effect: { stamina: -6, money: -2000 }, log: "💥 [慘烈失敗] 郵務車後視鏡擦撞路邊電桿受損。" } }
-            ]
-        }
-    ],
-
-    // 第一類：投遞中遇到的問題 (通用庫)
+    // 類別 1: 投遞中遇到的問題
     delivery: [
         {
             title: "暴雨突襲與積水路段", desc: "午後突降狂風暴雨，前方路段積水嚴重，郵件有泡水風險...",
-            options: [
-                { text: "【穩健】暫避騎樓，將郵件套上防雨塑膠袋後等雨勢變小", baseChance: 85, statCheck: "adaptability", success: { effect: { stamina: -2, adaptability: 3, performance: 3 }, log: "✅ [成功] 郵件完好無損，客戶讚許你的細心。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 等雨過久，部分信件稍微延誤。" } },
-                { text: "【平衡】憑經驗繞道高勢巷弄繼續遞送", baseChance: 60, statCheck: "stamina", success: { effect: { stamina: -5, adaptability: 5, performance: 5 }, log: "✅ [成功] 順利繞過積水區，準時完成遞送。" }, fail: { effect: { stamina: -8, performance: -4 }, log: "❌ [失敗] 迷失在陌生巷弄，白白浪費體力與時間。" } },
-                { text: "【冒險】油門一催，直接衝過積水！", baseChance: 30, statCheck: "adaptability", success: { effect: { stamina: -3, reputation: 6, performance: 8 }, log: "🎉 [大成功] 奇蹟般衝過！被目擊民眾讚為「最強郵差」。" }, fail: { effect: { stamina: -10, performance: -8, money: -3000 }, log: "💥 [慘烈失敗] 引擎進水熄火，包裹受損。" } }
-            ]
+            options: createThreeOptions(
+                { t: "暫避騎樓，套上防雨塑膠袋後等雨勢變小", s: "adaptability", sc: { effect: { adaptability: 3, performance: 2 }, log: "✅ 郵件完好無損，順利送達。" }, fc: { effect: { stamina: -2 }, log: "❌ 等雨過久，耽誤少許時間。" } },
+                { t: "憑經驗繞道高勢巷弄繼續遞送", s: "stamina", sc: { effect: { stamina: -3, performance: 4 }, log: "✅ 繞過積水區，按時完成任務。" }, fc: { effect: { stamina: -6 }, log: "❌ 在巷弄迷路，體力白白消耗。" } },
+                { t: "油門一催，直接衝過積水區域！", s: "adaptability", sc: { effect: { reputation: 6, performance: 6 }, log: "🎉 奇蹟衝過積水！被民眾稱為最強郵差。" }, fc: { effect: { money: -2000, performance: -5 }, log: "💥 機車進水熄火，部分包裹濕透。" } }
+            )
         },
         {
             title: "無繫繩惡犬攔路", desc: "一隻大型猛犬衝出巷口對你狂吠，堵住去路...",
-            options: [
-                { text: "【穩健】保持冷靜不對視，用郵差包擋前面緩步退後", baseChance: 80, statCheck: "eq", success: { effect: { eq: 4, adaptability: 2 }, log: "✅ [成功] 犬隻見無威脅後自行退去。" }, fail: { effect: { stamina: -3, eq: -2 }, log: "❌ [失敗] 被堵在巷口近20分鐘，進度嚴重受阻。" } },
-                { text: "【平衡】掏出隨身肉乾試圖進行友好外交", baseChance: 60, statCheck: "eq", success: { effect: { eq: 6, reputation: 4, money: -100 }, log: "✅ [成功] 肉乾收服成功，以後這條巷子暢行無阻。" }, fail: { effect: { eq: -4, money: -100 }, log: "❌ [失敗] 狗吃完肉乾繼續狂吠，毫無效果。" } },
-                { text: "【冒險】拿防身棍大聲呵斥，硬生生逼退惡犬！", baseChance: 25, statCheck: "stamina", success: { effect: { reputation: 8, stamina: 3 }, log: "🎉 [大成功] 霸氣威壓！惡犬夾著尾巴逃跑。" }, fail: { effect: { stamina: -12, performance: -6, money: -2000 }, log: "💥 [慘烈失敗] 激怒惡犬被咬傷褲管，必須就醫打針。" } }
+            options: createThreeOptions(
+                { t: "保持冷靜不對視，用郵差包擋前面緩步退後", s: "eq", sc: { effect: { eq: 3, adaptability: 2 }, log: "✅ 犬隻見無威脅後自行退去。" }, fc: { effect: { stamina: -3 }, log: "❌ 被堵在巷口20分鐘，進度受阻。" } },
+                { t: "掏出隨身肉乾試圖進行外交破冰", s: "eq", sc: { effect: { eq: 5, reputation: 3, money: -100 }, log: "✅ 肉乾收服成功，建立友好關係。" }, fc: { effect: { eq: -3, money: -100 }, log: "❌ 狗吃完肉乾繼續狂吠，無效。" } },
+                { t: "拿防身棍大聲呵斥，硬生生逼退惡犬！", s: "stamina", sc: { effect: { reputation: 8, stamina: 2 }, log: "🎉 霸氣威壓！惡犬夾尾巴逃跑。" }, fc: { effect: { stamina: -10, money: -2000 }, log: "💥 被惡犬咬傷褲管，就醫打針。" } }
+            )
+        },
+        {
+            title: "死者掛號信件", desc: "收件人已於上個月過世，家屬情緒激動拒絕簽收...",
+            options: createThreeOptions(
+                { t: "耐心安撫情緒，說明退件規範並攜回處理", s: "eq", sc: { effect: { eq: 4, reputation: 3 }, log: "✅ 家屬體諒理解，依規順利退件。" }, fc: { effect: { eq: -2 }, log: "❌ 溝通時間過長，心情受影響。" } },
+                { t: "請里長或鄰居協助勸導與見證簽收", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 4 }, log: "✅ 里長協助順利解決退回手續。" }, fc: { effect: { reputation: -2 }, log: "❌ 里長不在，徒勞無功。" } },
+                { t: "直接大聲跟家屬爭執法規條文", s: "eq", sc: { effect: { eq: 8, performance: 4 }, log: "🎉 用堅定氣勢壓制對方，依法攜回。" }, fc: { effect: { reputation: -8, performance: -6 }, log: "💥 被家屬檢舉態度惡劣，挨申訴。" } }
+            )
+        },
+        {
+            title: "舊街區超重包裹", desc: "舊公寓五樓無電梯，有20公斤重包裹需親送上樓...",
+            options: createThreeOptions(
+                { t: "分兩次搬運，扶著樓梯慢慢爬上樓", s: "stamina", sc: { effect: { stamina: -4, performance: 3 }, log: "✅ 順利送達，獲得住戶感謝。" }, fc: { effect: { stamina: -8 }, log: "❌ 體力透支，雙腿發軟。" } },
+                { t: "打電話請住戶下樓一起幫忙抬上去", s: "eq", sc: { effect: { stamina: -2, eq: 3 }, log: "✅ 住戶熱心下樓一同搬運。" }, fc: { effect: { eq: -4 }, log: "❌ 住戶口氣不好，拒絕下樓。" } },
+                { t: "一次把所有重物扛上肩，一口氣衝上五樓！", s: "stamina", sc: { effect: { stamina: -2, performance: 8 }, log: "🎉 驚人體力爆發！迅速完成送達。" }, fc: { effect: { stamina: -15, performance: -4 }, log: "💥 拉傷腰部，接下來幾天舉步維艱。" } }
+            )
+        },
+        {
+            title: "模糊不清的門牌地址", desc: "信件上的地址字跡被水沾濕模糊，無法辨識號碼...",
+            options: createThreeOptions(
+                { t: "攜回局裡用系統交叉比對住戶資料", s: "adaptability", sc: { effect: { adaptability: 4, performance: 2 }, log: "✅ 查出正確地址，明日成功投遞。" }, fc: { effect: { performance: -2 }, log: "❌ 查無此人，只能作廢退件。" } },
+                { t: "詢問該巷口的柑仔店老老闆協助認人", s: "eq", sc: { effect: { eq: 4, reputation: 4 }, log: "✅ 老闆一眼認出是誰家的信件！" }, fc: { effect: { eq: -2 }, log: "❌ 老闆也不清楚，浪費時間。" } },
+                { t: "憑直覺丟進看起來最像的那一戶門口", s: "adaptability", sc: { effect: { performance: 6 }, log: "🎉 瞎猜竟然猜中了！住戶無抱怨。" }, fc: { effect: { reputation: -8, performance: -8 }, log: "💥 投錯信箱引發住戶嚴重投訴。" } }
+            )
+        },
+        {
+            title: "高空拋物危險區域", desc: "經過某舊大樓下方，經常有住戶亂扔垃圾與雜物...",
+            options: createThreeOptions(
+                { t: "戴好安全帽，沿著騎樓遮雨棚快速通過", s: "adaptability", sc: { effect: { adaptability: 3, stamina: -1 }, log: "✅ 安全通過危險區域。" }, fc: { effect: { stamina: -3 }, log: "❌ 被濺出的垃圾水潑到。" } },
+                { t: "連絡管委會反映此危險情況", s: "eq", sc: { effect: { reputation: 4, eq: 3 }, log: "✅ 管委會承諾加強貼告示改善。" }, fc: { effect: { eq: -3 }, log: "❌ 管委會互甩包袱不處理。" } },
+                { t: "站在大樓下對著上方大聲開罵！", s: "stamina", sc: { effect: { reputation: 6 }, log: "🎉 氣勢凌人，住戶嚇得不敢再扔。" }, fc: { effect: { reputation: -6, eq: -4 }, log: "💥 被高空潑水伺候，狼狽不堪。" } }
             ]
-        }
+        },
+        {
+            title: "繁華商業區無處停車", desc: "商業大樓周邊全部劃紅線，無任何合法停車空間...",
+            options: createThreeOptions(
+                { t: "停至付費停車場，再步行推車進大樓", s: "stamina", sc: { effect: { stamina: -3, money: -100, performance: 2 }, log: "✅ 多花錢但安全合規完成。" }, fc: { effect: { stamina: -6 }, log: "❌ 走路過遠耗費大量精力。" } },
+                { t: "與大樓管理員溝通，借停地下室卸貨區", s: "eq", sc: { effect: { eq: 4, reputation: 4 }, log: "✅ 管理員熱情通融停靠。" }, fc: { effect: { eq: -3 }, log: "❌ 被管理員冷漠拒絕。" } },
+                { t: "直接騎上人行道並把車停在大樓大門口！", s: "adaptability", sc: { effect: { performance: 6 }, log: "🎉 快速完成遞送且沒被檢舉。" }, fc: { effect: { money: -600, performance: -4 }, log: "💥 被路過警察開違規停車單。" } }
+            ]
+        },
+        {
+            title: "高溫酷暑發局警報", desc: "體感溫度高達40度，騎車路上感到頭暈目眩...",
+            options: createThreeOptions(
+                { t: "至超商購買運動飲料補充水分，稍作休息", s: "stamina", sc: { effect: { stamina: 3, money: -50 }, log: "✅ 體力恢復，避免中暑。" }, fc: { effect: { stamina: -2, money: -50 }, log: "❌ 休息時間過長，稍微延誤。" } },
+                { t: "調整路線，優先遞送遮陰較多的樹蔭巷弄", s: "adaptability", sc: { effect: { adaptability: 4, stamina: 1 }, log: "✅ 路線安排得當，順利降溫。" }, fc: { effect: { stamina: -4 }, log: "❌ 繞路反而多曬了太陽。" } },
+                { t: "無視身體警訊，一口氣衝完所有信件！", s: "stamina", sc: { effect: { performance: 8 }, log: "🎉 鋼鐵意志！提早完成本日遞送。" }, fc: { effect: { stamina: -15, performance: -5 }, log: "💥 嚴重中暑刮痧，被迫請假。" } }
+            ]
+        },
+        {
+            title: "郵務機車鏈條脫落", desc: "半路機車傳出異音，鏈條鬆脫卡死在路邊...",
+            options: createThreeOptions(
+                { t: "推車至附近特約機車行進行檢修", s: "adaptability", sc: { effect: { adaptability: 3, stamina: -2 }, log: "✅ 車行快速修復，重返崗位。" }, fc: { effect: { stamina: -6 }, log: "❌ 車行客滿，等待許久。" } },
+                { t: "掏出隨車工具箱嘗試自己動手接回鏈條", s: "adaptability", sc: { effect: { adaptability: 6, stamina: -1 }, log: "✅ 展現黑手技能，5分鐘搞定！" }, fc: { effect: { stamina: -4, eq: -3 }, log: "❌ 弄得雙手黑漆漆還沒修好。" } },
+                { t: "不管機車，硬扛著郵包徒步繼續送完！", s: "stamina", sc: { effect: { stamina: -5, reputation: 8 }, log: "🎉 敬業精神感動附近店家！" }, fc: { effect: { stamina: -18, performance: -6 }, log: "💥 體力透支，包裹受損。" } }
+            ]
+        },
+        {
+            title: "住戶爭執郵件損壞", desc: "住戶聲稱信件封面有摺痕，當場怒罵並拒簽...",
+            options: createThreeOptions(
+                { t: "冷靜道歉並說明郵務標準處理流程", s: "eq", sc: { effect: { eq: 4, performance: 2 }, log: "✅ 化解對方情緒，順利簽收。" }, fc: { effect: { eq: -3 }, log: "❌ 對方依舊不依不饒。" } },
+                { t: "協助填寫郵件異常狀況表並協助送審", s: "adaptability", sc: { effect: { adaptability: 5, reputation: 3 }, log: "✅ 展現專業服務態度。" }, fc: { effect: { performance: -3 }, log: "❌ 繁瑣手續增加工作量。" } },
+                { t: "現場拍桌跟住戶比大小聲！", s: "eq", sc: { effect: { eq: 8 }, log: "🎉 氣勢嚇住對方，乖乖簽收。" }, fc: { effect: { reputation: -10, performance: -8 }, log: "💥 遭住戶錄影上傳網路，受懲處。" } }
+            ]
+        },
+        { t: "電梯大樓保全拒收", desc: "高級社區保全以規範為由，拒絕代收掛號信件...", options: createThreeOptions({ t: "拿出相關郵務法規與保全耐心說明", s: "eq", sc: { effect: { eq: 4, adaptability: 2 }, log: "✅ 保全理解法規，同意代收。" }, fc: { effect: { eq: -2 }, log: "❌ 保全依然死板拒絕。" } }, { t: "請保全打對講機讓住戶親自下樓簽收", s: "adaptability", sc: { effect: { adaptability: 4, stamina: -2 }, log: "✅ 住戶下樓完成簽收。" }, fc: { effect: { stamina: -5 }, log: "❌ 住戶不在家，只能開單。" } }, { t: "直接把信件塞進大樓郵箱轉身就走！", s: "adaptability", sc: { effect: { performance: 5 }, log: "🎉 省時省力完成投遞。" }, fc: { effect: { performance: -8, reputation: -6 }, log: "💥 被住戶舉報違規投遞。" } }) },
+        { t: "狹巷連環違停擋路", desc: "狹窄巷弄被違停汽車完全堵死，機車無法通過...", options: createThreeOptions({ t: "下車徒步將該巷弄信件投遞完畢", s: "stamina", sc: { effect: { stamina: -3, performance: 3 }, log: "✅ 勤奮完成全巷投遞。" }, fc: { effect: { stamina: -6 }, log: "❌ 走得氣喘吁吁。" } }, { t: "連絡警察局交通隊進行違停拖吊", s: "adaptability", sc: { effect: { adaptability: 5, reputation: 4 }, log: "✅ 警方快速前來開單清空巷道。" }, fc: { effect: { performance: -3 }, log: "❌ 等待警察耗費太多時間。" } }, { t: "長按喇叭1分鐘逼違停車主出來移車！", s: "eq", sc: { effect: { reputation: 5 }, log: "🎉 車主連忙跑出來移車道歉。" }, fc: { effect: { eq: -6, reputation: -5 }, log: "💥 與附近住戶引發集體口角。" } }) },
+        { t: "神秘收件人姓名", desc: "包裹收件人寫著「宇宙無敵大帥哥」，無真實姓名...", options: createThreeOptions({ t: "打電話核對電話號碼與住址資訊", s: "adaptability", sc: { effect: { adaptability: 4, eq: 2 }, log: "✅ 確認為該戶青少年住戶無誤。" }, fc: { effect: { adaptability: -2 }, log: "❌ 電話無人接聽。" } }, { t: "上樓詢問住戶是否有訂購此包裹", s: "eq", sc: { effect: { eq: 4, reputation: 3 }, log: "✅ 住戶笑著認領了包裹。" }, fc: { effect: { stamina: -4 }, log: "❌ 住戶感到莫名其妙並拒收。" } }, { t: "在樓下大喊「請宇宙無敵大帥哥下樓領件！」", s: "eq", sc: { effect: { reputation: 8 }, log: "🎉 住戶爆笑下樓領件，氣氛歡樂。" }, fc: { effect: { reputation: -6, eq: -4 }, log: "💥 被認為是在嘲諷住戶，挨投訴。" } }) },
+        { t: "夜間加班投遞快捷", desc: "夜間快捷包裹過多，已超過正常下班時間...", options: createThreeOptions({ t: "按部就班繼續送完，並申請加班費", s: "stamina", sc: { effect: { stamina: -4, money: 1000, performance: 3 }, log: "✅ 賺取加班費並順利送達。" }, fc: { effect: { stamina: -8 }, log: "❌ 體力過度消耗。" } }, { t: "與同班同仁溝通協助分擔部分路線", s: "eq", sc: { effect: { eq: 5, reputation: 4 }, log: "✅ 同事情誼深厚，熱心幫忙分擔。" }, fc: { effect: { eq: -3 }, log: "❌ 同事也各自忙碌無法幫忙。" } }, { t: "將剩餘快捷標記「不在家」直接攜回！", s: "adaptability", sc: { effect: { stamina: 2 }, log: "🎉 提早下班休息。" }, fc: { effect: { performance: -10, reputation: -8 }, log: "💥 客戶抓包在家，爆發嚴重投訴。" } }) },
+        { t: "超大郵件塞不進郵箱", desc: "平信尺寸過大，住宅郵箱口太窄塞不進去...", options: createThreeOptions({ t: "按門鈴嘗試親自交給住戶", s: "eq", sc: { effect: { eq: 3, performance: 2 }, log: "✅ 住戶在家親自接收。" }, fc: { effect: { stamina: -3 }, log: "❌ 無人應門，只能開單通知。" } }, { t: "用防水塑膠袋包好並妥善固定於門口", s: "adaptability", sc: { effect: { adaptability: 4, performance: 3 }, log: "✅ 包裝完善，住戶返家感謝。" }, fc: { effect: { performance: -2 }, log: "❌ 被風吹落受損。" } }, { t: "硬生生將信件對折硬塞進郵箱裡！", s: "stamina", sc: { effect: { performance: 4 }, log: "🎉 順利塞入且信件無大礙。" }, fc: { effect: { performance: -8, reputation: -6 }, log: "💥 住戶重要文件被摺毀，怒提告。" } }) },
+        { t: "郵件袋在半路破損", desc: "帆布郵件袋年久失修，底端破裂信件撒落一地...", options: createThreeOptions({ t: "冷靜撿拾並仔細清點數量有無短缺", s: "adaptability", sc: { effect: { adaptability: 4, performance: 2 }, log: "✅ 一封未少，替換新袋子繼續作業。" }, fc: { effect: { stamina: -4 }, log: "❌ 耗費大量時間清點整理。" } }, { t: "向附近店家借橡皮筋與袋子暫時捆紮", s: "eq", sc: { effect: { eq: 4, reputation: 4 }, log: "✅ 店家熱心提供協助。" }, fc: { effect: { eq: -2 }, log: "❌ 未借到合適工具。" } }, { t: "隨手用繩子打個粗糙結，塞回車廂繼續騎！", s: "stamina", sc: { effect: { stamina: -1 }, log: "🎉 撐回局裡沒有再次遺失。" }, fc: { effect: { performance: -10, reputation: -8 }, log: "💥 半路又遺失數封信件，大禍臨頭。" } }) },
+        { t: "市場人潮擁擠難行", desc: "早市時間通過傳統市場，人山人海無法騎車...", options: createThreeOptions({ t: "熄火用牽車方式緩慢通過市場區", s: "stamina", sc: { effect: { stamina: -3, performance: 2 }, log: "✅ 安全順利通過市場。" }, fc: { effect: { stamina: -6 }, log: "❌ 牽車極度耗費體力。" } }, { t: "繞道市場外圍大馬路避開人潮", s: "adaptability", sc: { effect: { adaptability: 4, stamina: -1 }, log: "✅ 路線選擇明智，節省時間。" }, fc: { effect: { stamina: -3 }, log: "❌ 外圍馬路同樣嚴重塞車。" } }, { t: "不斷按喇叭在市場人群中狂鑽！", s: "eq", sc: { effect: { performance: 5 }, log: "🎉 成功迅速穿過市場。" }, fc: { effect: { reputation: -8, eq: -6 }, log: "💥 引起攤販集體公憤圍剿。" } }) },
+        { t: "颱風天前夕信件暴增", desc: "颱風即將登陸，全局信件量暴增為平時的三倍...", options: createThreeOptions({ t: "配戴好防護裝備，按部就班分批投遞", s: "stamina", sc: { effect: { stamina: -5, performance: 4 }, log: "✅ 穩健完成狂風暴雨前投遞。" }, fc: { effect: { stamina: -10 }, log: "❌ 體力幾近耗盡。" } }, { t: "與同班夥伴規劃區域聯投支援", s: "eq", sc: { effect: { eq: 5, reputation: 5 }, log: "✅ 團隊合作，效率倍增！" }, fc: { effect: { eq: -3 }, log: "❌ 協調不佳反而拖慢進度。" } }, { t: "只送掛號信，平信全部留到颱風後再送！", s: "adaptability", sc: { effect: { stamina: 2 }, log: "🎉 輕鬆保全體力。" }, fc: { effect: { performance: -10, reputation: -6 }, log: "💥 積壓過多郵件遭主管嚴厲處分。" } }) },
+        { t: "寄件人貼錯郵票面額", desc: "多封重要信件少貼5元郵票，依法需向收件人補收...", options: createThreeOptions({ t: "耐心向收件人解釋欠資規定並收取費用", s: "eq", sc: { effect: { eq: 4, performance: 3 }, log: "✅ 住戶體諒並補足欠資金額。" }, fc: { effect: { eq: -3 }, log: "❌ 住戶嫌煩拒收退件。" } }, { t: "協助開立欠資通知單攜回局內處理", s: "adaptability", sc: { effect: { adaptability: 4 }, log: "✅ 標準流程處置完畢。" }, fc: { effect: { performance: -2 }, log: "❌ 增加後續行政作業時間。" } }, { t: "自掏腰包幫忙墊5元郵票錢直接投遞！", s: "reputation", sc: { effect: { money: -50, reputation: 8 }, log: "🎉 住戶極度感謝你的熱心服務！" }, fc: { effect: { money: -50 }, log: "❌ 住戶視為理所當然，毫無謝意。" } }) },
+        { t: "送達時住戶正在吵架", desc: "抵達門口時，屋內夫妻正大聲摔東西劇烈爭執...", options: createThreeOptions({ t: "在門外適度敲門，聲明郵務身分說明來意", s: "eq", sc: { effect: { eq: 4, adaptability: 2 }, log: "✅ 屋內暫停爭執，順利簽收。" }, fc: { effect: { eq: -3 }, log: "❌ 屋內無人理會，白等一場。" } }, { t: "先送隔壁住戶，半小時後再回頭投遞", s: "adaptability", sc: { effect: { adaptability: 4, stamina: -1 }, log: "✅ 回頭時雙方情緒已平復。" }, fc: { effect: { stamina: -3 }, log: "❌ 回頭時依然在劇烈爭吵。" } }, { t: "大聲衝屋內喊「要吵去法庭吵，先出來簽收！」", s: "eq", sc: { effect: { reputation: 8 }, log: "🎉 霸氣制止爭吵，雙方愣住簽收。" }, fc: { effect: { eq: -8, reputation: -6 }, log: "💥 被怒氣衝衝的住戶當場飆罵。" } }) }
     ],
 
-    // 第二類：職場上與同事或上級的互動
+    // 類別 2: 職場上與同事或上級的互動
     workplace: [
         {
-            title: "局內新舊系統轉型培訓", desc: "局裡推行數位化郵務系統，資深同仁抱怨連連，主管徵求種子教官...",
-            options: [
-                { text: "【穩健】按部就班參加培訓，完成基本學習任務", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, performance: 2 }, log: "✅ [成功] 平穩掌握新系統操作。" }, fail: { effect: { adaptability: -2 }, log: "❌ [失敗] 系統操作仍不夠熟練。" } },
-                { text: "【平衡】主動擔任種子教官，耐心地教學長輩同仁", baseChance: 60, statCheck: "eq", success: { effect: { eq: 8, reputation: 7, performance: 5 }, log: "✅ [成功] 成為局裡數位達人，深受前輩讚許！" }, fail: { effect: { stamina: -5, eq: -4 }, log: "❌ [失敗] 耗費大量精力教學，成果不佳。" } }
-            ]
-        }
+            title: "局內推行新數位系統", desc: "局裡引進全新PDA簽收系統，資深前輩排斥使用...",
+            options: createThreeOptions(
+                { t: "按部就班參加培訓，完成個人系統測試", s: "adaptability", sc: { effect: { adaptability: 4, performance: 2 }, log: "✅ 平穩掌握新系統操作。" }, fc: { effect: { adaptability: -2 }, log: "❌ 操作仍不夠熟練。" } },
+                { t: "主動擔任種子教官，耐心地教學長輩同仁", s: "eq", sc: { effect: { eq: 7, reputation: 6, performance: 4 }, log: "✅ 成為數位達人，深受前輩讚許！" }, fc: { effect: { stamina: -4, eq: -3 }, log: "❌ 耗費精力教學但成果不佳。" } },
+                { t: "私下跟前輩一起聯合聯署抵制新系統！", s: "reputation", sc: { effect: { reputation: 8 }, log: "🎉 獲得老鳥同仁一致擁戴！" }, fc: { effect: { performance: -10, reputation: -6 }, log: "💥 被主管列入重點黑名單。" } }
+            )
+        },
+        {
+            title: "同事請假工作重擔分配", desc: "同班同事因病請假一週，其路線需要班內同仁分擔...",
+            options: createThreeOptions(
+                { t: "配合主管調配，承擔合理比例的區域", s: "stamina", sc: { effect: { stamina: -4, performance: 4 }, log: "✅ 展現配合度，獲主管肯定。" }, fc: { effect: { stamina: -7 }, log: "❌ 工作量過大非常疲憊。" } },
+                { t: "主動主導班內分工，優化共同支援路線", s: "eq", sc: { effect: { eq: 6, reputation: 6 }, log: "✅ 展現領導潛能，獲得團隊好評。" }, fc: { effect: { eq: -3 }, log: "❌ 分工不均引發同事不滿。" } },
+                { t: "當場裝病請假，擺明不願分擔額外工作！", s: "adaptability", sc: { effect: { stamina: 4 }, log: "🎉 成功規避重擔，在家休息。" }, fc: { effect: { reputation: -10, performance: -8 }, log: "💥 被同事拆穿，人緣徹底破裂。" } }
+            )
+        },
+        {
+            title: "排班休假衝突爭執", desc: "熱門連續假期，多人同時申請排休，名額有限...",
+            options: createThreeOptions(
+                { t: "尊重抽籤或排班規則，配合局內協調", s: "eq", sc: { effect: { eq: 3, reputation: 3 }, log: "✅ 展現團隊合作精神。" }, fc: { effect: { eq: -2 }, log: "❌ 未能抽中理想假檔。" } },
+                { t: "私下與同事協商交換班表並給予補償", s: "eq", sc: { effect: { eq: 5, money: -500 }, log: "✅ 雙方滿意，成功換到假期。" }, fc: { effect: { money: -500, eq: -2 }, log: "❌ 協商失敗，白花心思。" } },
+                { t: "直接在晨會上與搶假的同事大聲拍桌！", s: "reputation", sc: { effect: { reputation: 6 }, log: "🎉 氣勢強硬，對方被迫讓假。" }, fc: { effect: { reputation: -8, eq: -6 }, log: "💥 破壞團隊和睦，遭主管訓斥。" } }
+            )
+        },
+        {
+            title: "考績評定面談", desc: "年終主管進行考績一對一面談，詢問你的職涯規劃...",
+            options: createThreeOptions(
+                { t: "虛心接受建議，並提出改善工作的實質計畫", s: "performance", sc: { effect: { performance: 5, reputation: 3 }, log: "✅ 獲得主管高度肯定與良好考績。" }, fc: { effect: { performance: -2 }, log: "❌ 面談表現平平。" } },
+                { t: "準備詳細數據，展現自己這一年的優異績效", s: "adaptability", sc: { effect: { performance: 8, adaptability: 4 }, log: "✅ 數據充分，爭取到最佳考績！" }, fc: { effect: { performance: -3 }, log: "❌ 被主管認為過度邀功。" } },
+                { t: "當面質疑主管考績評分不公、偏心其他人！", s: "eq", sc: { effect: { reputation: 8 }, log: "🎉 主管被逼退讓，重新檢討評分。" }, fc: { effect: { performance: -10, reputation: -8 }, log: "💥 徹底得罪主管，考績拿丙等。" } }
+            )
+        },
+        {
+            title: "工會代表選舉", desc: "局內即將選出新一屆工會代表，同仁勸你參選...",
+            options: createThreeOptions(
+                { t: "積極拜訪同仁，發表務實的權益改善政見", s: "reputation", sc: { effect: { reputation: 8, eq: 5 }, log: "✅ 高票當選工會代表！" }, fc: { effect: { reputation: -2 }, log: "❌ 落選但建立了人脈。" } },
+                { t: "保持中立，擔任選務工作人員協助投開票", s: "adaptability", sc: { effect: { adaptability: 3, eq: 3 }, log: "✅ 中立公正獲得大家尊重。" }, fc: { effect: { adaptability: -2 }, log: "❌ 選務過程繁瑣累人。" } },
+                { t: "在局內大聲痛批現任工會全是黑箱作業！", s: "eq", sc: { effect: { reputation: 10 }, log: "🎉 引發強烈共鳴，橫掃選票！" }, fc: { effect: { reputation: -10, eq: -6 }, log: "💥 遭既得利益者集體排擠。" } }
+            )
+        },
+        { t: "局長無預警視察", desc: "總公司局長突然蒞臨基層分局視察環境與作業...", options: createThreeOptions({ t: "維持日常標準規範，專心處理手頭工作", s: "performance", sc: { effect: { performance: 4, reputation: 2 }, log: "✅ 展現沉穩專業形象。" }, fc: { effect: { performance: -2 }, log: "❌ 稍微緊張出現小失誤。" } }, { t: "主動為局長介紹基層投遞作業流程細節", s: "eq", sc: { effect: { eq: 6, reputation: 6 }, log: "✅ 給局長留下深刻良好印象！" }, fc: { effect: { eq: -3, performance: -3 }, log: "❌ 被認為是在刻意諂媚。" } }, { t: "當場向局長告狀「基層設備老舊、主管無能」！", s: "reputation", sc: { effect: { reputation: 12 }, log: "🎉 局長下令調查，被讚為基層英雄！" }, fc: { effect: { performance: -12, reputation: -8 }, log: "💥 直屬主管事後瘋狂穿小鞋。" } }) },
+        { t: "分局尾牙聚餐", desc: "年終分局舉辦尾牙聚餐，主管與同仁熱情敬酒...", options: createThreeOptions({ t: "適量飲酒，親切與各桌同仁互動交流", s: "eq", sc: { effect: { eq: 5, reputation: 3 }, log: "✅ 展現良好社交親和力。" }, fc: { effect: { stamina: -3 }, log: "❌ 稍微喝多隔天頭痛。" } }, { t: "擔任尾牙活動主持人，帶動全場熱烈氣氛", s: "eq", sc: { effect: { eq: 8, reputation: 7 }, log: "✅ 主持功力驚艷全場，人氣大增！" }, fc: { effect: { eq: -4 }, log: "❌ 場面一度尷尬冷場。" } }, { t: "喝醉酒後拉著主管的領帶開始發酒瘋！", s: "stamina", sc: { effect: { reputation: 8 }, log: "🎉 全場爆笑，被封為尾牙戰神！" }, fc: { effect: { reputation: -10, eq: -8 }, log: "💥 丟臉至極，成為全局笑柄。" } }) },
+        { t: "前輩傳授偷懶撇步", desc: "資深前輩私下教你如何「壓信」以減少當日工作量...", options: createThreeOptions({ t: "禮貌謝謝前輩，但堅持按規定當日送完", s: "performance", sc: { effect: { performance: 4, eq: 2 }, log: "✅ 堅持原則且未得罪前輩。" }, fc: { effect: { eq: -3 }, log: "❌ 前輩覺得你看不起他。" } }, { t: "將前輩經驗轉化為合理優化投遞順序的技巧", s: "adaptability", sc: { effect: { adaptability: 6, performance: 3 }, log: "✅ 取其精華，效率顯著提升！" }, fc: { effect: { performance: -2 }, log: "❌ 效果不彰。" } }, { t: "立刻現學現賣，把一半平信藏在車廂帶回家！", s: "adaptability", sc: { effect: { stamina: 5 }, log: "🎉 提早兩小時下班爽玩。" }, fc: { effect: { performance: -12, reputation: -10 }, log: "💥 遭民眾舉報積壓郵件，記大過。" } }) },
+        { t: "晨會政宣宣導", desc: "晨會上主管花費一小時宣導瑣碎的行政注意事項...", options: createThreeOptions({ t: "端坐認真聆聽，並做筆記記下重點", s: "performance", sc: { effect: { performance: 3, adaptability: 2 }, log: "✅ 獲主管讚賞態度認真。" }, fc: { effect: { stamina: -2 }, log: "❌ 聽到昏昏欲睡。" } }, { t: "利用時間在底下快速心算規劃今日投遞路線", s: "adaptability", sc: { effect: { adaptability: 5, stamina: 2 }, log: "✅ 充分利用時間，效率大增！" }, fc: { effect: { performance: -2 }, log: "❌ 被主管點名分心。" } }, { t: "直接在晨會上大聲打哈欠並趴下大睡！", s: "stamina", sc: { effect: { stamina: 5 }, log: "🎉 補足睡眠，精神飽滿。" }, fc: { effect: { performance: -8, reputation: -6 }, log: "💥 當場被主管痛罵並罰站。" } }) },
+        { t: "同事間的八卦流言", desc: "局內瘋傳某位同仁的私生活八卦，大家熱烈討論...", options: createThreeOptions({ t: "不參與流言傳播，專心處理個人工作", s: "eq", sc: { effect: { eq: 4, reputation: 3 }, log: "✅ 保持中立清白，贏得信任。" }, fc: { effect: { eq: -2 }, log: "❌ 被小圈圈認為不合群。" } }, { t: "適時出面為當事同仁緩和氣氛、澄清事實", s: "eq", sc: { effect: { eq: 7, reputation: 6 }, log: "✅ 正義感獲當事人極度感激！" }, fc: { effect: { reputation: -4, eq: -4 }, log: "💥 捲入紛爭，惹火上身。" } }, { t: "添油加醋加油添醋，編造更離奇的版本廣播！", s: "reputation", sc: { effect: { reputation: 8 }, log: "🎉 成為局內八卦核心焦點人物。" }, fc: { effect: { reputation: -10, eq: -8 }, log: "💥 被當事人提告誹謗，局面失控。" } }) },
+        { t: "辦公桌座位調整", desc: "局內重新調整辦公空間，分派你的新座位...", options: createThreeOptions({ t: "接受安排，迅速整理好新座位環境", s: "adaptability", sc: { effect: { adaptability: 3, performance: 2 }, log: "✅ 迅速適應新環境。" }, fc: { effect: { adaptability: -2 }, log: "❌ 新座位採光不良不習慣。" } }, { t: "與同事協商交換到採光動線更好的位置", s: "eq", sc: { effect: { eq: 5, reputation: 3 }, log: "✅ 順利換到心儀位置。" }, fc: { effect: { eq: -3 }, log: "❌ 協商不成場面尷尬。" } }, { t: "把主管的專屬辦公椅直接搬到自己位子坐！", s: "stamina", sc: { effect: { stamina: 5 }, log: "🎉 享受高階人體工學椅舒適感。" }, fc: { effect: { performance: -8, reputation: -6 }, log: "💥 被主管逼令當場搬回去。" } }) },
+        { t: "志工服務活動", desc: "局裡舉辦假日社區志工關懷活動，徵求志願者...", options: createThreeOptions({ t: "報名參加，展現郵務士關懷社區熱忱", s: "reputation", sc: { effect: { reputation: 6, eq: 3, stamina: -2 }, log: "✅ 建立良好社區與局內形象。" }, fc: { effect: { stamina: -4 }, log: "❌ 假日犧牲休息時間。" } }, { t: "負責活動後勤物資籌備與攝影紀錄", s: "adaptability", sc: { effect: { adaptability: 5, performance: 4 }, log: "✅ 展現優秀後勤籌備能力。" }, fc: { effect: { adaptability: -2 }, log: "❌ 籌備過程繁瑣疲憊。" } }, { t: "簽到領完免費志工便當後立刻偷溜！", s: "adaptability", sc: { effect: { stamina: 3, money: 100 }, log: "🎉 白賺一份高檔便當與休息。" }, fc: { effect: { reputation: -8, performance: -6 }, log: "💥 被主辦點名抓包，顏面盡失。" } }) },
+        { t: "分局團購風潮", desc: "同事發起熱門團購名產，邀請你一同響應...", options: createThreeOptions({ t: "適度響應購買一兩份，交誼熱絡人際關係", s: "eq", sc: { effect: { eq: 4, money: -300 }, log: "✅ 融入局內社交小圈圈。" }, fc: { effect: { money: -300 }, log: "❌ 名產味道不合胃口。" } }, { t: "發揮商業頭腦，幫忙談到更好的大宗折扣", s: "adaptability", sc: { effect: { adaptability: 6, reputation: 5, money: -200 }, log: "✅ 幫大家省錢，獲得一致讚許！" }, fc: { effect: { eq: -3 }, log: "❌ 砍價過程惹怒店家。" } }, { t: "冷嘲熱諷說「買這種東西根本是浪費錢！」", s: "eq", sc: { effect: { money: 0 }, log: "🎉 成功守住荷包錢包。" }, fc: { effect: { eq: -6, reputation: -6 }, log: "💥 破壞氣氛，被發起同仁排擠。" } }) },
+        { t: "體能測驗檢定", desc: "每年例行的郵務人員體能與搬重測驗登場...", options: createThreeOptions({ t: "平時維持運動，按標準動作安全完成測驗", s: "stamina", sc: { effect: { stamina: 3, performance: 3 }, log: "✅ 順利通過體能測驗。" }, fc: { effect: { stamina: -2 }, log: "❌ 成績剛好卡在及格線。" } }, { t: "研究測驗配速與搬運技巧，獲取高分", s: "adaptability", sc: { effect: { stamina: 4, performance: 6 }, log: "✅ 技巧得當，拿下全局最高分！" }, fc: { effect: { stamina: -4 }, log: "❌ 技巧運用不當稍微拉傷。" } }, { t: "測驗前喝下3瓶高劑量能量飲料硬衝極限！", s: "stamina", sc: { effect: { performance: 10, stamina: -2 }, log: "🎉 刷新分局歷史最佳紀錄！" }, fc: { effect: { stamina: -12, performance: -4 }, log: "💥 心悸送醫，測驗宣告取消。" } }) },
+        { t: "業務宣導績效目標", desc: "局裡下達個人壽險或郵政商城業務宣導目標...", options: createThreeOptions({ t: "遞送時順口向熟客宣導，務實爭取績效", s: "performance", sc: { effect: { performance: 5, money: 500 }, log: "✅ 達成基本目標，獲得微薄獎金。" }, fc: { effect: { performance: -2 }, log: "❌ 推廣效果有限。" } }, { t: "發揮親和力，深入社區向長輩詳細解說", s: "eq", sc: { effect: { eq: 6, performance: 8, money: 1500 }, log: "✅ 績效達標，獲得績效獎金！" }, fc: { effect: { eq: -3 }, log: "❌ 耗費大量時間溝通。" } }, { t: "自己掏錢幫全家大小全部投保衝數字！", s: "money", sc: { effect: { performance: 12, reputation: 5, money: -5000 }, log: "🎉 拿下全分局第一名業績王！" }, fc: { effect: { money: -5000, performance: -4 }, log: "💥 荷包大失血，後悔莫及。" } }) },
+        { t: "新進菜鳥指導任務", desc: "主管安排一位新進菜鳥由你擔任師傅進行帶領...", options: createThreeOptions({ t: "耐心地帶領菜鳥跑路線，傳授標準規範", s: "eq", sc: { effect: { eq: 5, reputation: 4, performance: 3 }, log: "✅ 菜鳥快速上手，感激你的教導。" }, fc: { effect: { stamina: -4 }, log: "❌ 菜鳥學習較慢增加負擔。" } }, { t: "設計一套高效圖表路線教學法教導菜鳥", s: "adaptability", sc: { effect: { adaptability: 7, reputation: 5 }, log: "✅ 教學有方，被評為優秀導師！" }, fc: { effect: { adaptability: -2 }, log: "❌ 菜鳥聽不懂複雜圖表。" } }, { t: "把所有最重最累的包裹全部扔給菜鳥搬！", s: "stamina", sc: { effect: { stamina: 6 }, log: "🎉 工作極度輕鬆，享受師傅威嚴。" }, fc: { effect: { reputation: -8, eq: -6 }, log: "💥 菜鳥受不了離職，向主管告狀。" } }) },
+        { t: "分局設備故障修繕", desc: "分局分信台照明設備故障，維修人員需三日後才來...", options: createThreeOptions({ t: "調整工作位置至光線充足處繼續分信", s: "adaptability", sc: { effect: { adaptability: 3, performance: 2 }, log: "✅ 克服環境影響完成作業。" }, fc: { effect: { stamina: -2 }, log: "❌ 眼睛較為疲勞。" } }, { t: "拿出自家備用檯燈與延長線支援公用", s: "reputation", sc: { effect: { reputation: 6, eq: 4 }, log: "✅ 熱心公德心獲得局內一致讚賞！" }, fc: { effect: { money: -200 }, log: "❌ 檯燈不慎損壞自認倒楣。" } }, { t: "以此為由拒絕分信，直接在分信台開睡！", s: "stamina", sc: { effect: { stamina: 5 }, log: "🎉 獲得充足休息。" }, fc: { effect: { performance: -8, reputation: -6 }, log: "💥 影響全班進度，遭嚴厲懲處。" } }) },
+        { t: "局內交誼廳清潔輪值", desc: "輪到你負責本週分局交誼廳與休息區環境清潔...", options: createThreeOptions({ t: "認真打掃環境，保持休息區乾淨整潔", s: "performance", sc: { effect: { performance: 3, reputation: 3 }, log: "✅ 環境煥然一新，同仁感謝。" }, fc: { effect: { stamina: -2 }, log: "❌ 打掃花費不少體力。" } }, { t: "發揮創意重新調整交誼廳桌椅布局", s: "adaptability", sc: { effect: { adaptability: 5, reputation: 4 }, log: "✅ 空間變寬敞，獲得好評！" }, fc: { effect: { adaptability: -2 }, log: "❌ 布局不合大家習慣。" } }, { t: "花錢請清潔公司來代打掃除！", s: "money", sc: { effect: { money: -1000, stamina: 3 }, log: "🎉 完全不費吹灰之力完成清潔。" }, fc: { effect: { money: -1000, reputation: -4 }, log: "💥 被同仁批評過度奢華鋪張。" } }) },
+        { t: "安全衛生宣導演練", desc: "消防與安全衛生演練，需操作滅火器與逃生設備...", options: createThreeOptions({ t: "認真配合操作，熟練安全逃生技能", s: "adaptability", sc: { effect: { adaptability: 4, performance: 2 }, log: "✅ 順利完成演練合格。" }, fc: { effect: { stamina: -2 }, log: "❌ 演練過程較為枯燥。" } }, { t: "主動擔任消防演練示範人員", s: "reputation", sc: { effect: { reputation: 6, performance: 4 }, log: "✅ 動作標準，獲得消防人員誇獎！" }, fc: { effect: { eq: -2 }, log: "❌ 操作稍微緊張順序出錯。" } }, { t: "演練時把乾粉滅火器噴向不爽的同事！", s: "stamina", sc: { effect: { reputation: 8 }, log: "🎉 全場爆笑，成為經典名場面。" }, fc: { effect: { performance: -12, reputation: -10 }, log: "💥 造成嚴重混亂，記大過處分。" } }) },
+        { t: "主管提出新效率方案", desc: "主管提出一套全新的分信排班流程，請大家提供意見...", options: createThreeOptions({ t: "提出務實且具建設性的修正建議", s: "performance", sc: { effect: { performance: 5, adaptability: 4 }, log: "✅ 建議獲採納，方案更加完善。" }, fc: { effect: { performance: -2 }, log: "❌ 主管未採納個人意見。" } }, { t: "全力支持主管方案，並主動協助宣導推動", s: "eq", sc: { effect: { eq: 6, reputation: 5 }, log: "✅ 展現高執行力，獲主管重用！" }, fc: { effect: { reputation: -3 }, log: "❌ 被同事認為是主管貼身拍馬屁。" } }, { t: "當場冷笑諷刺「這種外行方案根本行不通！」", s: "eq", sc: { effect: { reputation: 8 }, log: "🎉 講出基層心聲，同仁大聲叫好！" }, fc: { effect: { performance: -10, reputation: -8 }, log: "💥 讓主管極度難堪，被列入黑名單。" } }) }
     ],
 
-    // 第三類：生涯意外與個人選擇
+    // 類別 3: 其他可能會遇到的事情 (社會、生活、意外)
     career: [
         {
-            title: "路遇重大車禍救人事件", desc: "投遞途中目擊前方面包車與機車相撞，傷者倒地不起...",
-            options: [
-                { text: "【穩健】立即停靠安全處，幫忙撥打119並維護現場", baseChance: 85, statCheck: "adaptability", success: { effect: { adaptability: 4, reputation: 6 }, log: "✅ [成功] 處置得當，救護車迅速趕到。" }, fail: { effect: { performance: -2 }, log: "❌ [失敗] 等候救護車導致後續信件延誤。" } },
-                { text: "【冒險】憑急救知識直接進行止血處置並指揮交通", baseChance: 35, statCheck: "eq", success: { effect: { reputation: 12, performance: 10, eq: 8 }, log: "🎉 [大成功] 勇救民眾！登上地方新聞，局裡表揚！" }, fail: { effect: { eq: -5, performance: -5 }, log: "💥 [慘烈失敗] 處置不當引發爭執，場面混亂。" } }
-            ]
-        }
-    ],
-
-    // 不良嗜好相關事件
-    badHabitEvents: [
+            title: "路遇重大車禍救人", desc: "投遞途中目擊前方面包車與機車相撞，傷者倒地不起...",
+            options: createThreeOptions(
+                { t: "立即停靠安全處，撥打119並協助維護現場", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 5 }, log: "✅ 處置得當，救護車迅速趕到。" }, fc: { effect: { performance: -2 }, log: "❌ 等候時間導致信件稍微延誤。" } },
+                { t: "憑急救知識進行止血處置並指揮現場交通", s: "eq", sc: { effect: { reputation: 10, performance: 8, eq: 6 }, log: "🎉 勇救民眾！登上地方新聞表揚！" }, fc: { effect: { eq: -4, performance: -4 }, log: "💥 處置引發現場混亂。" } },
+                { t: "掏出手機現場直播「重大車禍第一現場」！", s: "adaptability", sc: { effect: { money: 2000, reputation: 6 }, log: "🎉 直播流量爆表，獲得打賞！" }, fc: { effect: { reputation: -10, performance: -8 }, log: "💥 被網民圍剿冷血無情，遭懲處。" } }
+            )
+        },
         {
-            title: "不良嗜好發作與健康危機",
-            desc: "長期的菸酒/檳榔習慣讓你在高強度投遞後感到胸悶咳嗽，身體發出警訊...",
-            options: [
-                { text: "【戒除】展現鋼鐵意志，決心徹底戒除嗜好！", baseChance: 40, statCheck: "stamina", 
-                  success: { isQuit: true, effect: { stamina: 10 }, log: "🎉 [戒煙/戒檳成功] 你憑藉頑強意志成功戒除不良嗜好！擺脫減益與額外花費！" }, 
-                  fail: { isQuit: false, effect: { stamina: -4 }, log: "❌ [戒除失敗] 意志力不足，戒斷症狀讓你感到焦慮，戒除失敗。" } },
-                { text: "【順應】忍耐一下，抽根菸/咬顆檳榔提神繼續工作", baseChance: 90, statCheck: "stamina", 
-                  success: { isQuit: false, effect: { stamina: -2, eq: 2 }, log: "✅ 短暫舒緩了精神，但身體負擔依然存在。" }, 
-                  fail: { isQuit: false, effect: { stamina: -5 }, log: "❌ 身體狀況每況愈下。" } }
-            ]
-        }
+            title: "路邊拾獲重金錢包", desc: "在投遞路邊發現一個皮夾，裡面有三萬元現金與證件...",
+            options: createThreeOptions(
+                { t: "立即送至附近派出所，依法製作筆錄", s: "reputation", sc: { effect: { reputation: 6, eq: 3 }, log: "✅ 拾金不昧，獲得失主感謝信。" }, fc: { effect: { performance: -2 }, log: "❌ 製作筆錄耗費一小時。" } },
+                { t: "透過皮夾內名片直接電話聯絡失主取回", s: "adaptability", sc: { effect: { eq: 6, money: 1000 }, log: "✅ 失主萬分感激，致贈紅包！" }, fc: { effect: { eq: -3 }, log: "❌ 失主懷疑皮夾內金額短少。" } }, { t: "四顧無人，直接將三萬元現金放入自己口袋！", s: "stamina", sc: { effect: { money: 30000 }, log: "🎉 神不知鬼不覺，發了一筆橫財！" }, fc: { effect: { reputation: -15, money: -30000 }, log: "💥 被路邊監視器拍下，移送法辦。" } }
+            )
+        },
+        {
+            title: "巷口火災警報發作", desc: "遞送途中發現某民宅二樓冒出濃濃黑煙，疑似火警...",
+            options: createThreeOptions(
+                { t: "大聲呼叫附近住戶避難並立即通報119", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 6 }, log: "✅ 通報及時，消防隊快速撲滅。" }, fc: { effect: { stamina: -3 }, log: "❌ 現場煙霧讓人嗆咳不止。" } },
+                { t: "拿起鄰居滅火器衝上去嘗試初期滅火", s: "stamina", sc: { effect: { stamina: -4, reputation: 10, performance: 6 }, log: "🎉 成功撲滅初火！獲頒消防英雄！" }, fc: { effect: { stamina: -12, performance: -4 }, log: "💥 滅火失敗嗆傷受罰。" } },
+                { t: "拿出手機近距離自拍「火燒厝現場」！", s: "adaptability", sc: { effect: { reputation: 5 }, log: "🎉 社群媒體獲得大量點讚。" }, fc: { effect: { reputation: -8, eq: -6 }, log: "💥 被住戶批評見死不救。" } })
+        },
+        {
+            title: "社區老奶奶迷路", desc: "街角有一位患失智症的老奶奶焦急拉著你問路...",
+            options: createThreeOptions(
+                { t: "耐心安撫並聯絡當地里長與派車前來接回", s: "eq", sc: { effect: { eq: 5, reputation: 4 }, log: "✅ 里長順利接回老奶奶。" }, fc: { effect: { performance: -2 }, log: "❌ 陪伴等候耗費時間。" } },
+                { t: "憑對轄區的熟悉，直接騎車護送奶奶回家", s: "adaptability", sc: { effect: { adaptability: 6, reputation: 6 }, log: "✅ 精準送回家中，家屬感激涕零！" }, fc: { effect: { stamina: -4 }, log: "❌ 送錯住址多繞了路。" } },
+                { t: "給奶奶一張錯誤的地圖指引，轉身繼續送信！", s: "stamina", sc: { effect: { performance: 4 }, log: "🎉 按時完成個人工作。" }, fc: { effect: { reputation: -10, eq: -8 }, log: "💥 奶奶走失引發搜救，遭檢舉。" } }) },
+        { t: "野生浪貓受困車底", desc: "一隻可愛小浪貓卡在郵務車底盤喵喵大哭...", options: createThreeOptions({ t: "趴在地上耐心用食物誘引小貓爬出來", s: "eq", sc: { effect: { eq: 5, reputation: 4 }, log: "✅ 小貓安全脫困，萌化人心。" }, fc: { effect: { stamina: -3 }, log: "❌ 耗時良久才誘引出來。" } }, { t: "連絡動保團體前來協助專業救援", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 3 }, log: "✅ 動保團體順利救出小貓。" }, fc: { effect: { performance: -2 }, log: "❌ 等候救援耗費時間。" } }, { t: "發動引擎大聲轟油門試圖把貓嚇出來！", s: "stamina", sc: { effect: { performance: 4 }, log: "🎉 小貓嚇得秒飛奔出去。" }, fc: { effect: { reputation: -8, eq: -6 }, log: "💥 小貓受傷，被路過愛貓人士圍剿。" } }) },
+        { t: "路邊推銷員纏身", desc: "休息時間被推銷員纏住，強行推銷高價保養品...", options: createThreeOptions({ t: "堅定而禮貌地拒絕並迅速轉身離開", s: "eq", sc: { effect: { eq: 3, adaptability: 2 }, log: "✅ 順利擺脫糾纏。" }, fc: { effect: { eq: -2 }, log: "❌ 被纏住多廢話了5分鐘。" } }, { t: "反客為主，向推銷員推銷郵政壽險！", s: "adaptability", sc: { effect: { adaptability: 7, money: 1000 }, log: "✅ 成功反過來向對方賣出保單！" }, fc: { effect: { eq: -3 }, log: "❌ 互相尬聊浪費時間。" } }, { t: "聽信花言巧語，一口氣刷卡買下三萬塊保養品！", s: "money", sc: { effect: { money: -30000, eq: -4 }, log: "🎉 獲得整套高級保養品。" }, fc: { effect: { money: -30000, performance: -4 }, log: "💥 後知後覺發現是劣質劣品，氣炸。" } }) },
+        { t: "地方新聞記者採訪", desc: "記者在路上採訪郵務士關於高溫工作的辛酸...", options: createThreeOptions({ t: "說明郵務工作日常，感謝社會大眾關心", s: "eq", sc: { effect: { eq: 5, reputation: 5 }, log: "✅ 展現優良郵務士形象。" }, fc: { effect: { eq: -2 }, log: "❌ 受訪表達有些卡頓。" } }, { t: "暢所欲言，提出改善基層郵務裝備的建言", s: "adaptability", sc: { effect: { adaptability: 6, reputation: 7 }, log: "✅ 建言獲得廣大迴響與支持！" }, fc: { effect: { performance: -4 }, log: "❌ 部分言論引發主管不悅。" } }, { t: "對著鏡頭大聲狂飆三字經吐苦水！", s: "reputation", sc: { effect: { reputation: 10 }, log: "🎉 影片瘋傳，被封為真性情郵差！" }, fc: { effect: { performance: -12, reputation: -10 }, log: "💥 嚴重損害局譽，記大過處分。" } }) },
+        { t: "路上偶遇多年老友", desc: "投遞時意外遇見多年未見的高中同學...", options: createThreeOptions({ t: "交換聯絡方式，約定下班後再聚首寒暄", s: "eq", sc: { effect: { eq: 4, reputation: 2 }, log: "✅ 重溫老友情誼。" }, fc: { effect: { eq: -2 }, log: "❌ 後續忙碌未能約成。" } }, { t: "利用休息10分鐘在路邊咖啡店短暫敘舊", s: "eq", sc: { effect: { eq: 6, stamina: 2 }, log: "✅ 聊得十分投機，心情大好！" }, fc: { effect: { performance: -3 }, log: "❌ 聊過頭導致後續工作稍微延誤。" } }, { t: "直接丟下郵車，跟同學去KTV唱歡唱三小時！", s: "stamina", sc: { effect: { stamina: 10, eq: 5 }, log: "🎉 痛快歡唱，紓解全天壓力。" }, fc: { effect: { performance: -15, reputation: -10 }, log: "💥 遭舉報脫崗擅離職守，大禍臨頭。" } }) },
+        { t: "路邊蜂窩警報", desc: "路邊大樹上發現巨大虎頭蜂窩，已有民眾被螫...", options: createThreeOptions({ t: "保持距離，通報1999轉派農業局處理", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 3 }, log: "✅ 通報及時，維護社區安全。" }, fc: { effect: { adaptability: -2 }, log: "❌ 處理通報耗費時間。" } }, { t: "協助在樹下設立臨時告示警示過路民眾", s: "reputation", sc: { effect: { reputation: 6, eq: 4 }, log: "✅ 熱心預防民眾受害者。" }, fc: { effect: { stamina: -3 }, log: "❌ 頂著風險在樹下戒備。" } }, { t: "拿起竹竿直接去戳虎頭蜂窩！", s: "stamina", sc: { effect: { reputation: 8 }, log: "🎉 奇蹟將蜂窩打落且未被螫傷。" }, fc: { effect: { stamina: -15, money: -2000 }, log: "💥 遭群蜂瘋狂攻擊狂螫送醫。" } }) },
+        { t: "投資理財機會", desc: "朋友推薦一個號稱年化報酬率30%的投資項目...", options: createThreeOptions({ t: "謹慎拒絕，堅持將錢存入銀行或郵局高利定存", s: "adaptability", sc: { effect: { money: 2000, adaptability: 2 }, log: "✅ 保本穩健，小有利息收益。" }, fc: { effect: { money: 0 }, log: "❌ 利息收益微薄。" } }, { t: "研究正規股市ETF，進行定期定額理財配置", s: "adaptability", sc: { effect: { money: 10000, adaptability: 5 }, log: "✅ 理財有方，獲得穩定資本利得！" }, fc: { effect: { money: -2000 }, log: "❌ 市場波動遭遇微幅虧損。" } }, { t: "拿家底五十萬直接砸進去搞高風險炒作！", s: "money", sc: { effect: { money: 150000 }, log: "🎉 幸運資產翻倍，賺取爆利！" }, fc: { effect: { money: -100000 }, log: "💥 遭遇詐騙集團，積蓄慘賠光。" } }) },
+        { t: "街頭公益捐血車", desc: "休息時間路過捐血車，正在招募血型血源...", options: createThreeOptions({ t: "響應捐血250cc，獲得牛奶與紀念品", s: "reputation", sc: { effect: { reputation: 5, stamina: -2, money: 200 }, log: "✅ 熱血公益，獲得免費贈品。" }, fc: { effect: { stamina: -5 }, log: "❌ 捐血後感到體力稍微虛弱。" } }, { t: "號召附近郵友與住戶一同響應公益捐血", s: "eq", sc: { effect: { eq: 6, reputation: 6 }, log: "✅ 帶動公益風氣，獲團體感謝！" }, fc: { effect: { eq: -3 }, log: "❌ 響應人數不如預期。" } }, { t: "一口氣狂捐500cc後立刻衝去跑步送信！", s: "stamina", sc: { effect: { reputation: 10 }, log: "🎉 超人般體力，令人佩服。" }, fc: { effect: { stamina: -15, performance: -5 }, log: "💥 嚴重貧血昏倒在路邊。" } }) },
+        { t: "舊屋拆除粉塵污染", desc: "轄區內有舊屋拆除工程，粉塵與噪音極度嚴重...", options: createThreeOptions({ t: "戴上高防護口罩，快速完成該區投遞", s: "stamina", sc: { effect: { stamina: -2, adaptability: 2 }, log: "✅ 防護得當，影響減至最低。" }, fc: { effect: { stamina: -4 }, log: "❌ 粉塵仍導致呼吸道不適。" } }, { t: "向環保局檢舉該工程未依規定灑水防塵", s: "adaptability", sc: { effect: { adaptability: 5, reputation: 4 }, log: "✅ 環保局稽查勒令改善粉塵！" }, fc: { effect: { adaptability: -2 }, log: "❌ 檢舉手續繁瑣。" } }, { t: "衝進工地跟施工主任狂飆對罵！", s: "stamina", sc: { effect: { reputation: 6 }, log: "🎉 氣勢逼人，工地立馬灑水道歉。" }, fc: { effect: { eq: -6, stamina: -5 }, log: "💥 與工人引發肢體衝突拉扯。" } }) },
+        { t: "路上掉落物危險", desc: "快車道中央有一塊巨大木板掉落，影響行車安全...", options: createThreeOptions({ t: "將郵車停妥安全處，通報工務段前來清理", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 3 }, log: "✅ 通報及時，排除道路隱患。" }, fc: { effect: { performance: -2 }, log: "❌ 通報過程耗費時間。" } }, { t: "趁車流空檔，冒險跑至路中央搬離木板", s: "stamina", sc: { effect: { stamina: -2, reputation: 8 }, log: "🎉 熱心善舉被後方車輛行車紀錄器拍下！" }, fc: { effect: { stamina: -8 }, log: "💥 險被後方來車撞上，驚險萬分。" } }, { t: "騎著郵車當作障礙賽，直接騰空飛躍木板！", s: "stamina", sc: { effect: { reputation: 10 }, log: "🎉 炫酷車技引來路人特技尖叫！" }, fc: { effect: { money: -5000, stamina: -10 }, log: "💥 慘烈翻車，郵車零件摔散一地。" } }) },
+        { t: "社區重陽節活動", desc: "社區舉辦重陽節敬老活動，邀請郵務士順路同樂...", options: createThreeOptions({ t: "給予老人家節日問候，親切寒暄幾句", s: "eq", sc: { effect: { eq: 4, reputation: 4 }, log: "✅ 社區長輩非常喜歡你。" }, fc: { effect: { eq: -2 }, log: "❌ 寒暄時間稍微拖延。" } }, { t: "上台為長輩演唱一首懷舊老歌帶動氣氛", s: "eq", sc: { effect: { eq: 8, reputation: 8 }, log: "✅ 歌聲嘹亮，獲得長輩熱烈掌聲！" }, fc: { effect: { eq: -4 }, log: "❌ 歌聲破音場面稍微尷尬。" } }, { t: "直接跑去搶敬老禮品長壽麵線帶回家吃！", s: "stamina", sc: { effect: { money: 500 }, log: "🎉 白賺豐富麵線與禮品。" }, fc: { effect: { reputation: -10, eq: -8 }, log: "💥 被長輩檢舉與老人家搶東西。" } }) },
+        { t: "路邊幼童球滾落", desc: "路邊幼童的皮球滾入快車道，幼童準備衝出去拿...", options: createThreeOptions({ t: "大聲呵斥阻止幼童，並幫忙攔停後方來車", s: "adaptability", sc: { effect: { adaptability: 5, reputation: 6 }, log: "✅ 及時化解一場潛在車禍。" }, fc: { effect: { stamina: -2 }, log: "❌ 嚇到幼童哭泣。" } }, { t: "箭步衝上前抱住幼童，防止其衝入車道", s: "stamina", sc: { effect: { stamina: -2, reputation: 8 }, log: "🎉 英雄救美/童，獲家屬無比感激！" }, fc: { effect: { stamina: -6 }, log: "❌ 衝刺時跌倒擦傷膝蓋。" } }, { t: "腳一踢把皮球直接踢到兩百公尺遠！", s: "stamina", sc: { effect: { reputation: 4 }, log: "🎉 成功阻止幼童衝入車道。" }, fc: { effect: { reputation: -6, eq: -6 }, log: "💥 踢爆皮球，家屬要求賠償。" } }) },
+        { t: "午後雷陣雨傘被偷", desc: "進大樓送信10分鐘出來，發現放在門口的雨傘被偷...", options: createThreeOptions({ t: "自認倒楣，穿上備用雨衣繼續投遞行程", s: "adaptability", sc: { effect: { adaptability: 3, stamina: -1 }, log: "✅ 克服小挫折完成工作。" }, fc: { effect: { stamina: -3 }, log: "❌ 雨衣不夠透氣悶熱。" } }, { t: "請大樓管理員調閱監視器尋找偷傘贼", s: "adaptability", sc: { effect: { adaptability: 5, reputation: 3 }, log: "✅ 成功抓到偷傘路人並要回！" }, fc: { effect: { adaptability: -3 }, log: "❌ 監視器死角無功而返。" } }, { t: "順手幹走旁邊別人的高檔自動傘！", s: "adaptability", sc: { effect: { money: 500 }, log: "🎉 獲得一把更好看的高級傘。" }, fc: { effect: { reputation: -10, performance: -8 }, log: "💥 被監視器全程拍下，移送法辦。" } }) },
+        { t: "轄區藝文展覽邀請", desc: "轄區內藝文中心邀請你參觀郵政歷史特別展...", options: createThreeOptions({ t: "利用休假日前往參觀，充實郵務歷史知識", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 3 }, log: "✅ 增廣見聞，提升職涯素養。" }, fc: { effect: { stamina: -2 }, log: "❌ 展覽內容稍微枯燥。" } }, { t: "提供個人收藏的珍貴老郵務照片參展", s: "reputation", sc: { effect: { reputation: 8, eq: 5 }, log: "✅ 照片獲選參展，登上展覽簡介！" }, fc: { effect: { reputation: -2 }, log: "❌ 照片未被選入。" } }, { t: "展覽現場大聲跟導覽員爭辯歷史錯誤！", s: "reputation", sc: { effect: { reputation: 6 }, log: "🎉 展現權威知識，講服導覽員。" }, fc: { effect: { reputation: -6, eq: -5 }, log: "💥 被認為破壞展場秩序驅離。" } }) },
+        { t: "路上流浪狗跟隨", desc: "一隻親人的流浪狗跟著你的郵車跑了半個轄區...", options: createThreeOptions({ t: "聯絡當地動保團體安排領養與收容", s: "eq", sc: { effect: { eq: 4, reputation: 4 }, log: "✅ 浪浪獲得妥善收容照顧。" }, fc: { effect: { eq: -2 }, log: "❌ 動保團體暫無空位。" } }, { t: "自掏腰包買罐頭餵食，並收養為局寵", s: "eq", sc: { effect: { eq: 7, reputation: 7, money: -500 }, log: "✅ 浪浪成為郵局吉祥物，大受好評！" }, fc: { effect: { money: -500, eq: -3 }, log: "❌ 局內不允許飼養寵物。" } }, { t: "拿郵件包當作飛盤跟浪浪玩起抓鬼遊戲！", s: "stamina", sc: { effect: { stamina: 5, eq: 4 }, log: "🎉 歡樂互動，紓解工作壓力。" }, fc: { effect: { performance: -10, reputation: -8 }, log: "💥 郵件袋被浪浪咬破，郵件毀損。" } }) },
+        { t: "長輩熱心介紹對象", desc: "熱心住戶長輩非要幫單身的你介紹相親對象...", options: createThreeOptions({ t: "禮貌謝謝長輩好意，說明目前專心工作", s: "eq", sc: { effect: { eq: 4, reputation: 3 }, log: "✅ 婉轉拒絕且不失禮貌。" }, fc: { effect: { eq: -2 }, log: "❌ 長輩持續發動催婚攻勢。" } }, { t: "大方留下聯絡方式，給彼此一個認識機會", s: "eq", sc: { effect: { eq: 7, reputation: 5 }, log: "✅ 相親對象談吐得宜，展開良緣！" }, fc: { effect: { eq: -4 }, log: "❌ 相親過程極度尷尬無趣。" } }, { t: "誇張宣稱自己「早已看破紅塵出家！」", s: "eq", sc: { effect: { reputation: 6 }, log: "🎉 長輩震驚無語，再也不敢介紹。" }, fc: { effect: { reputation: -6, eq: -5 }, log: "💥 被傳為局內怪人。" } }) },
+        { t: "歲末年終路跑賽事", desc: "轄區舉辦歲末馬拉松，路線與投遞路線重疊...", options: createThreeOptions({ t: "配合路跑交通管制，彈性調整投遞順序", s: "adaptability", sc: { effect: { adaptability: 4, performance: 3 }, log: "✅ 順利避開交管完成遞送。" }, fc: { effect: { stamina: -3 }, log: "❌ 等待交管耗費時間。" } }, { t: "騎著郵車在選手旁加油打氣，帶動熱情", s: "eq", sc: { effect: { eq: 6, reputation: 6 }, log: "✅ 成為路跑賽事溫馨焦點！" }, fc: { effect: { performance: -2 }, log: "❌ 稍微影響選手跑步。" } }, { t: "騎著郵車直接衝進跑道跟路跑選手競速！", s: "stamina", sc: { effect: { reputation: 10 }, log: "🎉 騎車奪下「路跑第一名」爆紅！" }, fc: { effect: { performance: -12, reputation: -10 }, log: "💥 遭主辦單位告發妨礙賽事。" } }) }
     ]
 };
 
@@ -416,30 +354,39 @@ function startGame() {
     player.age = player.startAge;
     player.dept = document.getElementById('dept-select').value;
     
+    player.eq = getRandomInt(20, 80);
+    player.reputation = getRandomInt(20, 80);
+    player.adaptability = getRandomInt(20, 80);
+    player.performance = getRandomInt(20, 80);
+
     if (player.startAge > 40) {
         player.maxStaminaCap = 60;
-        player.stamina = Math.min(player.stamina, 60);
+        player.stamina = getRandomInt(20, 60);
+    } else {
+        player.maxStaminaCap = 80;
+        player.stamina = getRandomInt(20, 80);
     }
 
-    // 入職抽取不良嗜好
     let rand = Math.random();
     if (rand < 0.30) {
         player.badHabit = "抽菸";
         player.badHabitExpense = 36000;
-        player.stamina -= 5;
-    } else if (rand < 0.40) { // 30% + 10%
+        player.stamina = Math.max(20, player.stamina - 5);
+    } else if (rand < 0.40) {
         player.badHabit = "吃檳榔";
         player.badHabitExpense = 60000;
-        player.stamina -= 8;
+        player.stamina = Math.max(20, player.stamina - 8);
     }
 
     document.getElementById('setup-screen').classList.add('hidden');
     document.getElementById('game-screen').classList.remove('hidden');
 
     updateUI();
-    addLog(`📋 ${player.name} 正式報到入職郵務機構，分發至【${player.dept}】！`, true);
+    addLog(`📋 ${player.name} 正式報到入職，分發至【${player.dept}】！`, true);
+    addLog(`📊 體檢生成 (20-80 棒球量尺)：體力${player.stamina} / 情商${player.eq} / 聲望${player.reputation} / 應變${player.adaptability} / 評價${player.performance}`, true);
+
     if (player.badHabit) {
-        addLog(`⚠️ 入職擁有不良嗜好：【${player.badHabit}】(體力扣減，每年增加支出 $${player.badHabitExpense/10000} 萬)`, false);
+        addLog(`⚠️ 發現不良嗜好：【${player.badHabit}】(每年額外支出 $${player.badHabitExpense/10000} 萬)`, false);
     }
 
     startYearTurn();
@@ -454,19 +401,20 @@ function updateUI() {
     document.getElementById('money').innerText = `$${(player.money / 10000).toFixed(1)} 萬`;
 
     let habitDisplay = document.getElementById('bad-habit-display');
-    if (player.badHabit) {
-        habitDisplay.innerHTML = `<span class="bad-habit-tag">${player.badHabit}</span>`;
-    } else {
-        habitDisplay.innerHTML = "";
-    }
+    habitDisplay.innerHTML = player.badHabit ? `<span class="bad-habit-tag">${player.badHabit}</span>` : "";
 
     let salInfo = calculateSalary(player.age - player.startAge + 1);
     document.getElementById('salary-display').innerText = `${salInfo.displayWan} 萬`;
 
     ['stamina', 'eq', 'reputation', 'adaptability', 'performance'].forEach(stat => {
-        const el = document.getElementById(stat);
-        el.innerText = player[stat];
-        el.className = `stat-val ${getRankClass(player[stat])}`;
+        const valEl = document.getElementById(stat);
+        const descEl = document.getElementById(`${stat}-desc`);
+        let val = player[stat];
+        let report = getScoutingReport(val);
+        valEl.innerText = val;
+        valEl.className = `stat-val ${report.class}`;
+        descEl.innerText = report.label;
+        descEl.className = `stat-desc ${report.class}`;
     });
 }
 
@@ -478,20 +426,13 @@ function addLog(text, isSuccess = true) {
     logBox.prepend(newEntry);
 }
 
-// 檢查是否有數值觸發最低值結局 (<= 0)
 function checkGameOver() {
     if (player.stamina <= 0) {
-        triggerEnding("失能或死亡", `身體狀況惡化至極限，體力歸零。因公過勞失能或不幸殉職...`);
+        triggerEnding("失能殉職", `過勞殉職，體力歸零...`);
         return true;
     }
     if (player.eq <= 0 || player.reputation <= 0 || player.adaptability <= 0 || player.performance <= 0) {
-        let lowestStat = "";
-        if (player.eq <= 0) lowestStat = "情商歸零，職場人際關係徹底破裂";
-        else if (player.reputation <= 0) lowestStat = "職場聲望掃地，陷入嚴重道德聲譽危機";
-        else if (player.adaptability <= 0) lowestStat = "應變能力不足，無法適應現代郵務工作";
-        else if (player.performance <= 0) lowestStat = "工作評價極度低下，考績連續不及格";
-
-        triggerEnding("解職結局", `由於${lowestStat}，你被迫遞交辭呈，結束了投遞人生！`);
+        triggerEnding("解職處分", `五維能力過低，遭機構予以免職！`);
         return true;
     }
     if (player.age >= player.retireAge) {
@@ -504,6 +445,7 @@ function checkGameOver() {
 function triggerEnding(endingType, reasonText) {
     let serviceYears = player.age - player.startAge + 1;
     let avgStat = Math.round((player.stamina + player.eq + player.reputation + player.adaptability + player.performance) / 5);
+    let avgReport = getScoutingReport(avgStat);
 
     document.getElementById('options').innerHTML = '';
     document.getElementById('phase-tag').innerText = "遊戲結束";
@@ -515,75 +457,38 @@ function triggerEnding(endingType, reasonText) {
         • 服役年資：${serviceYears} 年<br>
         • 最終職銜：${player.title}<br>
         • 累積淨資產：$${(player.money / 10000).toFixed(1)} 萬元<br>
-        • 最終五維平均：<strong class="${getRankClass(avgStat)}">${avgStat} 分</strong>
+        • 最終五維平均：<strong class="${avgReport.class}">${avgStat} 分 (${avgReport.label})</strong>
     `;
 }
 
-// 開始新的一年
 function startYearTurn() {
     if (checkGameOver()) return;
 
     let serviceYear = player.age - player.startAge + 1;
-
-    // 計算每年財務 (扣除基本生活費15萬 & 不良嗜好費用)
     let sal = calculateSalary(serviceYear).amount;
     let livingExpense = 150000;
     let extraExpense = player.badHabit ? player.badHabitExpense : 0;
     let netSavings = sal - livingExpense - extraExpense;
     player.money += netSavings;
 
-    let note = `(扣除基本生活費15萬`;
-    if (extraExpense > 0) note += `及${player.badHabit}開銷${extraExpense/10000}萬`;
-    note += `)`;
-    addLog(`📅 年資第 ${serviceYear} 年結算：年薪 $${sal/10000}萬，淨存入 $${netSavings/10000}萬 ${note}。`);
-
+    addLog(`📅 年資第 ${serviceYear} 年結算：年薪 $${sal/10000}萬，淨存入 $${netSavings/10000}萬。`);
     updateUI();
 
-    // 特殊劇情檢查順序：
-    // 1. 代理稽查/補缺稽查 檢查
-    if (checkInspectorPromotions(serviceYear)) return;
-
-    // 2. 升等考試 檢查 (年資>3年，每三年問一次)
-    if (!player.refusedPromotion && serviceYear > 3 && (serviceYear - 3) % 3 === 0) {
-        triggerExamEvent();
-        return;
-    }
-
-    // 3. 常規事件三階段
     player.currentPhase = 1;
     loadPhaseEvent();
 }
 
-// 載入階段事件
 function loadPhaseEvent() {
     if (checkGameOver()) return;
 
-    let serviceYear = player.age - player.startAge + 1;
-
     document.getElementById('phase-tag').innerText = `階段 ${player.currentPhase}/3：${
-        player.currentPhase === 1 ? '日常投遞事件' : player.currentPhase === 2 ? '職場互動事件' : '生涯意外事件'
+        player.currentPhase === 1 ? '投遞中遇到的問題' : player.currentPhase === 2 ? '職場上與同事/上級互動' : '其他可能會遇到的事情'
     }`;
 
-    let eventPool = [];
+    let categoryKey = player.currentPhase === 1 ? 'delivery' : player.currentPhase === 2 ? 'workplace' : 'career';
+    let pool = eventDatabase[categoryKey];
+    let selectedEvent = pool[getRandomInt(0, pool.length - 1)];
 
-    // 根據階段與條件組合事件庫
-    if (player.currentPhase === 1) {
-        eventPool = [...eventDatabase.delivery];
-        if (player.dept === "混投部門") eventPool.push(...eventDatabase.dept_mixed);
-        if (player.dept === "快包部門") eventPool.push(...eventDatabase.dept_express);
-        if (serviceYear <= 3) eventPool.push(...eventDatabase.rookie);
-        if (player.age >= 50) eventPool.push(...eventDatabase.veteran);
-    } else if (player.currentPhase === 2) {
-        eventPool = [...eventDatabase.workplace];
-        // 有不良嗜好時機率觸發不良嗜好事件
-        if (player.badHabit && Math.random() < 0.5) {
-            eventPool.push(...eventDatabase.badHabitEvents);
-        }
-    } else {
-        eventPool = [...eventDatabase.career];
-    }
-
-    let selectedEvent = eventPool[getRandomInt(0, eventPool.length - 1)];
     renderEvent(selectedEvent);
 }
 
@@ -616,22 +521,16 @@ function handleOptionClick(opt, chance) {
     let isSuccess = Math.random() * 100 < chance;
     let result = isSuccess ? opt.success : opt.fail;
 
-    // 處理屬性變更
     if (result.effect) {
         for (let stat in result.effect) {
             if (stat === 'money') {
                 player.money += result.effect[stat];
             } else {
                 player[stat] += result.effect[stat];
+                player[stat] = Math.max(0, Math.min(80, player[stat]));
                 if (stat === 'stamina') player.stamina = Math.min(player.stamina, player.maxStaminaCap);
             }
         }
-    }
-
-    // 處理戒煙/戒檳榔
-    if (result.isQuit) {
-        player.badHabit = null;
-        player.badHabitExpense = 0;
     }
 
     addLog(result.log, isSuccess);
@@ -639,195 +538,13 @@ function handleOptionClick(opt, chance) {
 
     if (checkGameOver()) return;
 
-    // 推進階段
     if (player.currentPhase < 3) {
         player.currentPhase++;
         loadPhaseEvent();
     } else {
-        // 完成一年
         player.age++;
         startYearTurn();
     }
-}
-
-// ================= 主管詢問代理稽查與升任郵務稽查 =================
-function checkInspectorPromotions(serviceYear) {
-    // 條件4：年資超過5年，應變與評價>60觸發代理稽查
-    if (!player.hasBeenProxyInspector && serviceYear > 5 && player.adaptability > 60 && player.performance > 60) {
-        renderCustomEvent(
-            "主管的面談詢問：代理稽查",
-            "由於你工作表現優異且應變能力極佳，主管親自找你面談，詢問你是否願意擔任「代理稽查」協助分擔管理業務...",
-            [
-                {
-                    text: "【願意】接受挑戰，擔任代理稽查",
-                    action: () => {
-                        player.hasBeenProxyInspector = true;
-                        player.reputation += 8;
-                        player.performance += 5;
-                        addLog("✅ 你接受了主管的提拔，正式成為代理稽查，職場聲望大幅提升！", true);
-                        updateUI();
-                        player.currentPhase = 1; loadPhaseEvent();
-                    }
-                },
-                {
-                    text: "【婉拒】只想專心做外勤投遞工作",
-                    action: () => {
-                        addLog("ℹ️ 你婉拒了主管的好意，繼續維持現狀。", true);
-                        player.currentPhase = 1; loadPhaseEvent();
-                    }
-                }
-            ]
-        );
-        return true;
-    }
-
-    // 條件4：擔任過代理稽查且年資超過十年，觸發補缺退休稽查
-    if (player.hasBeenProxyInspector && !player.isInspector && serviceYear > 10) {
-        renderCustomEvent(
-            "局內職缺異動：退休稽查遺缺",
-            "局裡資深稽查屆齡退休留下遺缺，主管考量你曾任代理稽查且經驗豐富，詢問你是否願意補上缺額正式升任郵務稽查？",
-            [
-                {
-                    text: "【願意】正式升任郵務稽查 (每年薪資增加6萬)",
-                    action: () => {
-                        player.isInspector = true;
-                        player.title = "郵務稽查";
-                        player.reputation += 15;
-                        addLog("🎉 恭喜！你正式升任為【郵務稽查】，每年薪資基礎增加 6 萬元！", true);
-                        updateUI();
-                        player.currentPhase = 1; loadPhaseEvent();
-                    }
-                },
-                {
-                    text: "【婉拒】習慣投遞生活，婉拒升任",
-                    action: () => {
-                        addLog("ℹ️ 你選擇放棄升任郵務稽查的機會。", true);
-                        player.currentPhase = 1; loadPhaseEvent();
-                    }
-                }
-            ]
-        );
-        return true;
-    }
-
-    return false;
-}
-
-// ================= 升等考試邏輯 =================
-function triggerExamEvent() {
-    renderCustomEvent(
-        "📝 三年一度：升等考試意願詢問",
-        "又到了三年一度的升等考試報名期，考取後可轉任內勤或更高職階，請問是否報名參加本次升等考試？",
-        [
-            {
-                text: "【參加】報名參加升等考試",
-                action: () => startExamProcess()
-            },
-            {
-                text: "【放棄】不參加，繼續外勤工作",
-                action: () => {
-                    addLog("ℹ️ 你選擇不參加本次升等考試。", true);
-                    player.currentPhase = 1; loadPhaseEvent();
-                }
-            }
-        ]
-    );
-}
-
-function startExamProcess() {
-    let isUnder40 = player.age < 40;
-    let title = isUnder40 ? "升等考試 (40歲以下組)" : "升等考試 (40歲以上組)";
-    let desc = isUnder40 
-        ? "作為年輕郵務士，這是衝刺職涯的重要轉折點！請選擇你的準備策略：" 
-        : "面對升等考試，雖然體力與記憶力不如當年，但豐富經驗是你的武器！請選擇策略：";
-
-    let options = [];
-
-    if (isUnder40) {
-        options = [
-            { text: "1. 認真準備 (機率高)", type: "認真", baseChance: 75 },
-            { text: "2. 佛系讀書 (機率中)", type: "佛系", baseChance: 45 },
-            { text: "3. 去吃便當 (放棄考試)", type: "便當", baseChance: 0 }
-        ];
-    } else {
-        options = [
-            { text: "1. 最後一搏 (機率中高)", type: "博", baseChance: 65 },
-            { text: "2. 鼓勵後輩 (機率低)", type: "鼓勵", baseChance: 35 },
-            { text: "3. 去吃便當 (放棄考試)", type: "便當", baseChance: 0 }
-        ];
-    }
-
-    let customOptions = options.map(opt => {
-        if (opt.type === "便當") {
-            return {
-                text: opt.text,
-                action: () => {
-                    addLog("🍱 你選擇去考場吃便當，輕鬆度過了一天。", true);
-                    player.currentPhase = 1; loadPhaseEvent();
-                }
-            };
-        }
-
-        // 計算成功率 (根據五維平均)
-        let avgStat = Math.round((player.stamina + player.eq + player.reputation + player.adaptability + player.performance) / 5);
-        let chance = opt.baseChance + Math.round((avgStat - 50) * 0.4);
-        chance = Math.max(15, Math.min(90, chance));
-
-        return {
-            text: `${opt.text} (成功率 ${chance}%)`,
-            action: () => processExamResult(isUnder40, chance)
-        };
-    });
-
-    renderCustomEvent(title, desc, customOptions);
-}
-
-function processExamResult(isUnder40, chance) {
-    let isSuccess = Math.random() * 100 < chance;
-
-    if (isSuccess) {
-        if (isUnder40) {
-            triggerEnding("升等成功結局", `恭喜你在40歲前通過升等考試！成功轉任內勤管理職階，開啟全新職涯高峰！`);
-        } else {
-            // 40歲以上成功，檢查適應不良條件：若應變能力或工作評價低於50
-            if (player.adaptability < 50 || player.performance < 50) {
-                renderCustomEvent(
-                    "內勤生活適應不良...",
-                    "雖然你成功通過升等考試轉任內勤，但由於應變能力或工作評價較低，你極度不適應繁瑣的內勤公文生活... 最終你決定回頭哭求外勤主管收留你！",
-                    [
-                        {
-                            text: "返回外勤繼續遊戲 (不再詢問升等考試)",
-                            action: () => {
-                                player.refusedPromotion = true;
-                                addLog("⚠️ 你因適應不良回頭哭求外勤主管收留，重新回到外勤崗位，日後不再參加升等考試。", false);
-                                updateUI();
-                                player.currentPhase = 1; loadPhaseEvent();
-                            }
-                        }
-                    ]
-                );
-            } else {
-                triggerEnding("升等成功結局", `恭喜你在40歲後憑藉豐富資歷與優異能力通過升等考試！順利轉任內勤，雖然你一再推辭擔任主管的機會，並在工作崗位上閃閃躲躲，但這才是你想要的人生！`);
-            }
-        }
-    } else {
-        addLog("❌ 升等考試不幸落榜，繼續留在外勤崗位奮鬥。", false);
-        player.currentPhase = 1; loadPhaseEvent();
-    }
-}
-
-function renderCustomEvent(title, desc, optionsArray) {
-    document.getElementById('story-text').innerHTML = `<strong>【${title}】</strong><br>${desc}`;
-    const optionsContainer = document.getElementById('options');
-    optionsContainer.innerHTML = '';
-
-    optionsArray.forEach(opt => {
-        let btn = document.createElement('button');
-        btn.className = 'option-btn';
-        btn.innerHTML = `<span>${opt.text}</span>`;
-        btn.onclick = opt.action;
-        optionsContainer.appendChild(btn);
-    });
 }
 </script>
 </body>
