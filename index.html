@@ -49,7 +49,7 @@
         <div class="form-group">
             <label for="start-age">入職年齡：<span id="age-val" style="color:#ffeb3b; font-weight:bold; font-size:18px;">22</span> 歲</label>
             <input type="range" id="start-age" min="18" max="50" value="22" oninput="onAgeChange(this.value)">
-            <div id="age-cap-tip" class="age-warning">⚠️ 入職年齡高於 40 歲：體力初始與最高上限受限為 60 分。</div>
+            <div id="age-cap-tip" class="age-warning">⚠️ 入職年齡超過 40 歲：體力初始與最高上限受限為 60 分。</div>
         </div>
 
         <div class="form-group">
@@ -60,7 +60,7 @@
             </select>
         </div>
 
-        <button class="start-btn" onclick="startGame()">正式報到入職 (隨機五維素質)</button>
+        <button class="start-btn" onclick="startGame()">正式報到入職 (隨機 20-80 五維素質)</button>
     </div>
 
     <div id="game-screen" class="hidden">
@@ -116,6 +116,7 @@ function calculateSalary(serviceYear) {
 
 function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
+// 根據 20-80 棒球量尺標註評級與稱號
 function getScoutingReport(val) {
     if (val >= 80) return { class: 'rank-80', label: '頂尖巨星' };
     if (val >= 70) return { class: 'rank-70', label: '全明星' };
@@ -130,7 +131,6 @@ function onAgeChange(val) {
     document.getElementById('age-cap-tip').style.display = parseInt(val) > 40 ? 'block' : 'none';
 }
 
-// 輔助函式：快速建立高/中/低三合理的選項
 function createThreeOptions(opt1, opt2, opt3) {
     return [
         { text: "【高合理性】" + opt1.t, baseChance: 80, statCheck: opt1.s, success: opt1.sc, fail: opt1.fc },
@@ -139,7 +139,7 @@ function createThreeOptions(opt1, opt2, opt3) {
     ];
 }
 
-// ================= 事件庫 (每類 20 個) =================
+
 const eventDatabase = {
     // 類別 1: 投遞中遇到的問題
     delivery: [
@@ -343,7 +343,6 @@ const eventDatabase = {
     ]
 };
 
-// ================= 遊戲核心邏輯 =================
 
 function startGame() {
     let nameInput = document.getElementById('player-name').value.trim();
@@ -354,11 +353,13 @@ function startGame() {
     player.age = player.startAge;
     player.dept = document.getElementById('dept-select').value;
     
+    // 入職時所有五維能力皆在 20-80 之間隨機生成
     player.eq = getRandomInt(20, 80);
     player.reputation = getRandomInt(20, 80);
     player.adaptability = getRandomInt(20, 80);
     player.performance = getRandomInt(20, 80);
 
+    // 入職年齡超過 40 歲，體力最高值與初始值上限受限為 60
     if (player.startAge > 40) {
         player.maxStaminaCap = 60;
         player.stamina = getRandomInt(20, 60);
@@ -426,13 +427,15 @@ function addLog(text, isSuccess = true) {
     logBox.prepend(newEntry);
 }
 
+// 檢測是否觸發最低值結局 (解職 / 失能 / 死亡)
 function checkGameOver() {
-    if (player.stamina <= 0) {
-        triggerEnding("失能殉職", `過勞殉職，體力歸零...`);
+    if (player.stamina <= 20) {
+        triggerEnding("失能或死亡結局", `體力值降至最低極限 (20 分)，不幸於勤務中過勞失能猝逝...`);
         return true;
     }
-    if (player.eq <= 0 || player.reputation <= 0 || player.adaptability <= 0 || player.performance <= 0) {
-        triggerEnding("解職處分", `五維能力過低，遭機構予以免職！`);
+    if (player.eq <= 20 || player.reputation <= 20 || player.adaptability <= 20 || player.performance <= 20) {
+        let failedStat = player.eq <= 20 ? "情商" : player.reputation <= 20 ? "職場聲望" : player.adaptability <= 20 ? "應變能力" : "工作評價";
+        triggerEnding("解職結局", `${failedStat}觸發最低評分 (20 分)，考績審查未通過，遭到郵政機構免職懲處！`);
         return true;
     }
     if (player.age >= player.retireAge) {
@@ -527,7 +530,8 @@ function handleOptionClick(opt, chance) {
                 player.money += result.effect[stat];
             } else {
                 player[stat] += result.effect[stat];
-                player[stat] = Math.max(0, Math.min(80, player[stat]));
+                // 限制數值在 20 到 80 之間
+                player[stat] = Math.max(20, Math.min(80, player[stat]));
                 if (stat === 'stamina') player.stamina = Math.min(player.stamina, player.maxStaminaCap);
             }
         }
