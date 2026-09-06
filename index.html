@@ -144,11 +144,11 @@ const eventDatabase = {
     // 類別 1: 投遞中遇到的問題
     delivery: [
         {
-            title: "暴雨突襲與積水路段", desc: "午後突降狂風暴雨，前方路段積水嚴重，郵件有泡水風險...",
+            title: "暴雨突襲", desc: "午後突降狂風暴雨，但你的雨衣和遮雨罩都放在公司沒帶出來",
             options: createThreeOptions(
-                { t: "暫避騎樓，套上防雨塑膠袋後等雨勢變小", s: "adaptability", sc: { effect: { adaptability: 3, performance: 2 }, log: "✅ 郵件完好無損，順利送達。" }, fc: { effect: { stamina: -2 }, log: "❌ 等雨過久，耽誤少許時間。" } },
-                { t: "憑經驗繞道高勢巷弄繼續遞送", s: "stamina", sc: { effect: { stamina: -3, performance: 4 }, log: "✅ 繞過積水區，按時完成任務。" }, fc: { effect: { stamina: -6 }, log: "❌ 在巷弄迷路，體力白白消耗。" } },
-                { t: "油門一催，直接衝過積水區域！", s: "adaptability", sc: { effect: { reputation: 6, performance: 6 }, log: "🎉 奇蹟衝過積水！被民眾稱為最強郵差。" }, fc: { effect: { money: -2000, performance: -5 }, log: "💥 機車進水熄火，部分包裹濕透。" } }
+                { t: "借路邊民宅騎樓躲雨，等待雨停", s: "adaptability", sc: { effect: { adaptability: 3, performance: 2 }, log: "✅ 雨很快就停了，帶著躲過雨的好心情結束這一天。" }, fc: { effect: { stamina: -2 }, log: "❌ 邊等雨停邊滑手機，不知不覺等了一個小時，回到局內都天黑了。" } },
+                { t: "只要騎得夠快，雨就淋不到我，繼續衝！", s: "stamina", sc: { effect: { reputation: 1, performance: 4 }, log: "✅ 果真在信件淋濕前送出，同事封你為雨天快手" }, fc: { effect: { stamina: -6 }, log: "❌ 雨勢太大，機車騎不夠快，民眾檢舉信件全溼" } },
+                { t: "老子不送了！直接把整台機車推到水溝裡並請求支援", s: "adaptability", sc: { effect: { reputation: 6, performance: 6 }, log: "🎉 稽查表示人沒事就好" }, fc: { effect: { money: -20000, performance: -5 }, log: "💥 機車進水壞了，信件全部濕透，還有的被水流沖走，面臨賠償。" } }
             )
         },
         {
