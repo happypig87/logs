@@ -146,33 +146,33 @@ const eventDatabase = {
         {
             title: "暴雨突襲", desc: "午後突降狂風暴雨，但你的雨衣和遮雨罩都放在公司沒帶出來",
             options: createThreeOptions(
-                { t: "借路邊民宅騎樓躲雨，等待雨停", s: "adaptability", sc: { effect: { adaptability: 3, performance: 2 }, log: "✅ 雨很快就停了，帶著躲過雨的好心情結束這一天。" }, fc: { effect: { stamina: -2 }, log: "❌ 邊等雨停邊滑手機，不知不覺等了一個小時，回到局內都天黑了。" } },
-                { t: "只要騎得夠快，雨就淋不到我，繼續衝！", s: "stamina", sc: { effect: { reputation: 1, performance: 4 }, log: "✅ 果真在信件淋濕前送出，同事封你為雨天快手" }, fc: { effect: { stamina: -6 }, log: "❌ 雨勢太大，機車騎不夠快，民眾檢舉信件全溼" } },
-                { t: "老子不送了！直接把整台機車推到水溝裡並請求支援", s: "adaptability", sc: { effect: { reputation: 6, performance: 6 }, log: "🎉 稽查表示人沒事就好" }, fc: { effect: { money: -20000, performance: -5 }, log: "💥 機車進水壞了，信件全部濕透，還有的被水流沖走，面臨賠償。" } }
+                { t: "借路邊民宅騎樓躲雨，等待雨停", s: "adaptability", sc: { effect: { adaptability: 2, performance: 1 }, log: "✅ 雨很快就停了，帶著躲過雨的好心情結束這一天。" }, fc: { effect: { adaptability: -1, performance: -2 }, log: "❌ 邊等雨停邊滑手機，不知不覺等了一個小時，回到局內都天黑了，被質疑在路上偷懶。" } },
+                { t: "只要騎得夠快，雨就淋不到我，繼續衝！", s: "adaptability", sc: { effect: { reputation: 2, adaptability: 4 }, log: "✅ 果真在信件淋濕前送出，同事封你為雨天快手" }, fc: { effect: {  adaptability: -2, stamina: -4 }, log: "❌ 雨勢太大，機車騎不夠快，民眾檢舉信件全溼，還感冒了" } },
+                { t: "老子不送了！直接把整台機車推到水溝裡並請求支援", s: "adaptability", sc: { effect: { reputation: 3, adaptability: 6 }, log: "🎉 謊稱騎車跌進水溝，稽查表示人沒事就好" }, fc: { effect: { money: -20000 , eq: -2, reputation:-2, performance: -5 }, log: "💥 機車進水壞了，信件全部濕透，還有的被水流沖走，面臨賠償。" } }
             )
         },
         {
-            title: "無繫繩惡犬攔路", desc: "一隻大型猛犬衝出巷口對你狂吠，堵住去路...",
+            title: "無牽繩惡犬攻擊", desc: "一隻沒有牽繩的吉娃娃衝出來對你吼叫，而你...",
             options: createThreeOptions(
-                { t: "保持冷靜不對視，用郵差包擋前面緩步退後", s: "eq", sc: { effect: { eq: 3, adaptability: 2 }, log: "✅ 犬隻見無威脅後自行退去。" }, fc: { effect: { stamina: -3 }, log: "❌ 被堵在巷口20分鐘，進度受阻。" } },
-                { t: "掏出隨身肉乾試圖進行外交破冰", s: "eq", sc: { effect: { eq: 5, reputation: 3, money: -100 }, log: "✅ 肉乾收服成功，建立友好關係。" }, fc: { effect: { eq: -3, money: -100 }, log: "❌ 狗吃完肉乾繼續狂吠，無效。" } },
-                { t: "拿防身棍大聲呵斥，硬生生逼退惡犬！", s: "stamina", sc: { effect: { reputation: 8, stamina: 2 }, log: "🎉 霸氣威壓！惡犬夾尾巴逃跑。" }, fc: { effect: { stamina: -10, money: -2000 }, log: "💥 被惡犬咬傷褲管，就醫打針。" } }
+                { t: "保持冷靜不對視，按喇叭呼叫民眾", s: "eq", sc: { effect: { eq: 1, adaptability: 2 }, log: "✅ 主人把吉娃娃抱走，人犬均安。" }, fc: { effect: { stamina: -3 }, log: "❌ 聽到喇叭聲，吉娃娃狂怒直接狠咬你的小腿。" } },
+                { t: "掏出隨身肉乾試圖收服惡犬", s: "eq", sc: { effect: { eq: 2, adaptability: 1, money: -100 }, log: "✅ 肉乾收服成功，建立友好關係。" }, fc: { effect: { eq: -3, money: -100 }, log: "❌ 狗吃完肉乾繼續狂吠，無效。" } },
+                { t: "你早就準備好打狗棒，要來制裁這隻不受教的臭狗！", s: "adaptability", sc: { effect: { reputation: 3, adaptability: 3 }, log: "🎉 霸氣威壓！吉娃娃吃痛逃離。" }, fc: { effect: { adaptability: -3, performance: -2, money: -10000 }, log: "💥 一棒入魂，吉娃娃被你的打狗棒一棍敲死，主人向你求償。" } }
             )
         },
         {
-            title: "死者掛號信件", desc: "收件人已於上個月過世，家屬情緒激動拒絕簽收...",
+            title: "死者掛號信件", desc: "收件人已於上個月過世，家屬情緒激動...",
             options: createThreeOptions(
-                { t: "耐心安撫情緒，說明退件規範並攜回處理", s: "eq", sc: { effect: { eq: 4, reputation: 3 }, log: "✅ 家屬體諒理解，依規順利退件。" }, fc: { effect: { eq: -2 }, log: "❌ 溝通時間過長，心情受影響。" } },
+                { t: "耐心安撫情緒", s: "eq", sc: { effect: { eq: 2 }, log: "✅ 家屬體諒理解。" }, fc: { effect: { eq: -2 }, log: "❌ 溝通時間過長，心情受影響。" } },
                 { t: "請里長或鄰居協助勸導與見證簽收", s: "adaptability", sc: { effect: { adaptability: 4, reputation: 4 }, log: "✅ 里長協助順利解決退回手續。" }, fc: { effect: { reputation: -2 }, log: "❌ 里長不在，徒勞無功。" } },
-                { t: "直接大聲跟家屬爭執法規條文", s: "eq", sc: { effect: { eq: 8, performance: 4 }, log: "🎉 用堅定氣勢壓制對方，依法攜回。" }, fc: { effect: { reputation: -8, performance: -6 }, log: "💥 被家屬檢舉態度惡劣，挨申訴。" } }
+                { t: "直接大聲跟家屬爭執", s: "eq", sc: { effect: { eq: 8, performance: 4 }, log: "🎉 用堅定氣勢嘴得對方啞口無言。" }, fc: { effect: { reputation: -8, performance: -6 }, log: "💥 被家屬打0800檢舉態度惡劣。" } }
             )
         },
         {
-            title: "舊街區超重包裹", desc: "舊公寓五樓無電梯，有20公斤重包裹需親送上樓...",
+            title: "舊公寓超重包裹", desc: "20公斤重包裹，收件人位於舊公寓五樓無電梯，郵局規定包裹無須上樓，但住戶無理取鬧...",
             options: createThreeOptions(
-                { t: "分兩次搬運，扶著樓梯慢慢爬上樓", s: "stamina", sc: { effect: { stamina: -4, performance: 3 }, log: "✅ 順利送達，獲得住戶感謝。" }, fc: { effect: { stamina: -8 }, log: "❌ 體力透支，雙腿發軟。" } },
-                { t: "打電話請住戶下樓一起幫忙抬上去", s: "eq", sc: { effect: { stamina: -2, eq: 3 }, log: "✅ 住戶熱心下樓一同搬運。" }, fc: { effect: { eq: -4 }, log: "❌ 住戶口氣不好，拒絕下樓。" } },
-                { t: "一次把所有重物扛上肩，一口氣衝上五樓！", s: "stamina", sc: { effect: { stamina: -2, performance: 8 }, log: "🎉 驚人體力爆發！迅速完成送達。" }, fc: { effect: { stamina: -15, performance: -4 }, log: "💥 拉傷腰部，接下來幾天舉步維艱。" } }
+                { t: "不再爭執，自己送上樓", s: "stamina", sc: { effect: { stamina: 2, performance: 1 }, log: "✅ 順利送達，獲得住戶感謝。" }, fc: { effect: { stamina: -4 }, log: "❌ 真的太重了，腰閃到，雙腿發軟。" } },
+                { t: "請住戶下樓一起幫忙抬上去", s: "eq", sc: { effect: { stamina: 1, eq: 3 }, log: "✅ 住戶熱心下樓一同搬運。" }, fc: { effect: { eq: -4 }, log: "❌ 住戶口氣不好，拒絕下樓。" } },
+                { t: "「幹！你要收就自己下來搬，不下來我就帶回去了」", s: "stamina", sc: { effect: { adaptability: 4, eq: 4 }, log: "🎉 住戶自知理虧，下來自己搬上去。" }, fc: { effect: { eq: -6, performance: -6 }, log: "💥 你惹到鯛民了，住戶打0800客訴你。" } }
             )
         },
         {
